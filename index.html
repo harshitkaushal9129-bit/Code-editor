@@ -19,7 +19,6 @@
             --editor-bg: #1e1e1e;
         }
         
-        /* Light Mode Classes */
         body.light-mode {
             --bg: #ffffff;
             --panel: #f3f3f3;
@@ -29,7 +28,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background 0.3s; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
 
         /* Professional Toolbar */
         .top-nav { background: var(--panel); padding: 5px 15px; display: flex; gap: 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
@@ -41,27 +40,12 @@
         .logo-img { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
         .logo-text { font-size: 18px; font-weight: bold; color: var(--primary); }
 
-        /* NEW: Tools Bar */
-        .tools-bar {
-            background: #252526;
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
-        .tool-select, .tool-btn {
-            background: #333;
-            color: white;
-            border: 1px solid #444;
-            padding: 4px 10px;
-            font-size: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            outline: none;
-        }
-        .tool-btn:hover { background: #444; }
+        /* Tools Bar */
+        .tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        .tool-select, .tool-btn { background: #333; color: white; border: 1px solid #444; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+        
+        /* File Input Hidden */
+        #file-input { display: none; }
 
         /* Main App Layout */
         .main-layout { display: flex; flex: 1; overflow: hidden; }
@@ -69,26 +53,10 @@
         .sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; }
         .sidebar-icon:hover { color: white; transform: scale(1.1); }
 
-        /* NEW: Tab Navigation */
-        .editor-tabs {
-            display: flex;
-            background: #2d2d2d;
-            border-bottom: 1px solid var(--border);
-        }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 13px;
-            color: #999;
-            border-right: 1px solid var(--border);
-            background: #2d2d2d;
-            transition: 0.2s;
-        }
-        .tab.active {
-            background: var(--editor-bg);
-            color: white;
-            border-top: 2px solid var(--primary);
-        }
+        /* Tab Navigation */
+        .editor-tabs { display: flex; background: #2d2d2d; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #999; border-right: 1px solid var(--border); white-space: nowrap; }
+        .tab.active { background: var(--editor-bg); color: white; border-top: 2px solid var(--primary); }
 
         .workspace { display: flex; flex: 1; overflow: hidden; }
         @media (max-width: 768px) { .workspace { flex-direction: column; } }
@@ -96,54 +64,32 @@
         .editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid var(--border); background: var(--editor-bg); }
         @media (max-width: 768px) { .editor-panels { width: 100%; height: 50%; } }
 
-        /* Panel Management */
         .panel { display: none; flex-direction: column; height: 100%; }
         .panel.active { display: flex; }
 
         .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: rgba(0,0,0,0.05); }
-        .panel-header label { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; }
-
-        textarea { 
-            width: 100%; 
-            flex: 1;
-            background: var(--editor-bg); 
-            color: var(--text-color); 
-            border: none; 
-            padding: 15px; 
-            font-family: 'Consolas', 'Courier New', monospace; 
-            outline: none; 
-            font-size: 14px; 
-            line-height: 1.6; 
-            resize: none; 
-        }
+        textarea { width: 100%; flex: 1; background: var(--editor-bg); color: var(--text-color); border: none; padding: 15px; font-family: 'Consolas', monospace; outline: none; font-size: 14px; line-height: 1.6; resize: none; }
 
         .preview-area { width: 40%; background: white; position: relative; }
         @media (max-width: 768px) { .preview-area { width: 100%; height: 50%; } }
-        iframe { width: 100%; height: 100%; border: none; background: white; }
+        iframe { width: 100%; height: 100%; border: none; }
 
         /* Buttons */
-        .btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
-        .html-btn { background: #e34f26; color: white; }
-        .css-btn { background: #007acc; color: white; }
-        .js-btn { background: #f7df1e; color: black; }
+        .btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
         .run-btn { background: #4caf50; color: white; }
-        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+        .py-btn { background: #3776ab; color: white; }
 
-        footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; font-weight: 500; z-index: 100; }
+        footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; }
         
-        /* Modals */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-        .modal-content { background: var(--panel); padding: 25px; border-radius: 12px; width: 320px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .modal-content h3 { margin-bottom: 15px; color: var(--primary); }
-        .close-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; margin-top: 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; }
     </style>
 </head>
 <body>
 
 <div class="top-nav">
-    <div class="menu-item" onclick="showShortcuts()">File</div>
-    <div class="menu-item" onclick="clearAll()">Edit</div>
-    <div class="menu-item" onclick="alert('Searching coming soon!')">Selection</div>
+    <div class="menu-item" onclick="document.getElementById('file-input').click()">📁 Open File</div>
+    <div class="menu-item" onclick="showShortcuts()">Shortcuts</div>
+    <div class="menu-item" onclick="clearAll()">Clear All</div>
     <div class="menu-item" onclick="showModal('helpModal')">Help</div>
     <div class="menu-item" onclick="showModal('devModal')" style="color: #f7df1e;">Developer</div>
 </div>
@@ -153,34 +99,32 @@
         <img src="Kaushalji.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1005/1005141.png'">
         <div class="logo-text">DevStudio Pro</div>
     </div>
-    <div style="display: flex; gap: 10px;">
-        <button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install App</button>
-        <button class="btn run-btn" onclick="runPreview()">▶ Run (Ctrl+Enter)</button>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input type="text" class="search-box" placeholder="Search code..." oninput="searchInEditor(this.value)">
+        <button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install</button>
+        <button class="btn run-btn" onclick="runPreview()">▶ Run</button>
     </div>
 </header>
 
 <div class="tools-bar">
-    <select class="tool-select" id="font-size" onchange="updateEditorStyle()">
-        <option value="12px">Font: 12px</option>
-        <option value="14px" selected>Font: 14px</option>
-        <option value="16px">Font: 16px</option>
-        <option value="18px">Font: 18px</option>
-        <option value="22px">Font: 22px</option>
+    <input type="file" id="file-input" accept=".html,.css,.js,.py" onchange="openLocalFile(event)">
+    <select class="tool-select" id="font-size" onchange="updateStyle()">
+        <option value="14px">14px</option>
+        <option value="16px">16px</option>
+        <option value="18px">18px</option>
+        <option value="20px">20px</option>
     </select>
-
-    <select class="tool-select" id="font-family" onchange="updateEditorStyle()">
+    <select class="tool-select" id="font-family" onchange="updateStyle()">
         <option value="'Consolas', monospace">Consolas</option>
-        <option value="'Courier New', monospace">Courier New</option>
-        <option value="Arial">Arial</option>
         <option value="system-ui">System UI</option>
+        <option value="'Courier New'">Courier New</option>
     </select>
-
-    <button class="tool-btn" onclick="toggleTheme()">🌓 Dark/Light Mode</button>
+    <button class="tool-btn" onclick="toggleTheme()">🌓 Change Theme</button>
 </div>
 
 <div class="main-layout">
     <div class="sidebar">
-        <div class="sidebar-icon">📂</div>
+        <div class="sidebar-icon" onclick="document.getElementById('file-input').click()">📂</div>
         <div class="sidebar-icon">🔍</div>
         <div class="sidebar-icon">🌿</div>
         <div class="sidebar-icon">🧩</div>
@@ -194,30 +138,27 @@
                 <div class="tab active" id="tab-html" onclick="switchTab('html')">index.html</div>
                 <div class="tab" id="tab-css" onclick="switchTab('css')">style.css</div>
                 <div class="tab" id="tab-js" onclick="switchTab('js')">script.js</div>
+                <div class="tab" id="tab-py" onclick="switchTab('py')">main.py</div>
             </div>
 
             <div id="panel-html" class="panel active">
-                <div class="panel-header">
-                    <label>HTML</label>
-                    <button class="btn html-btn" onclick="saveFile('html')">Save HTML</button>
-                </div>
-                <textarea id="html-code" placeholder="Write HTML here..." spellcheck="false" oninput="runPreview()"></textarea>
+                <div class="panel-header"><label>HTML</label><button class="btn" style="background:#e34f26;color:white" onclick="saveFile('html')">Save</button></div>
+                <textarea id="html-code" oninput="runPreview()"></textarea>
             </div>
 
             <div id="panel-css" class="panel">
-                <div class="panel-header">
-                    <label>CSS</label>
-                    <button class="btn css-btn" onclick="saveFile('css')">Save CSS</button>
-                </div>
-                <textarea id="css-code" placeholder="/* Write CSS here */" spellcheck="false" oninput="runPreview()"></textarea>
+                <div class="panel-header"><label>CSS</label><button class="btn" style="background:#007acc;color:white" onclick="saveFile('css')">Save</button></div>
+                <textarea id="css-code" oninput="runPreview()"></textarea>
             </div>
 
             <div id="panel-js" class="panel">
-                <div class="panel-header">
-                    <label>JavaScript</label>
-                    <button class="btn js-btn" onclick="saveFile('js')">Save JS</button>
-                </div>
-                <textarea id="js-code" placeholder="// Write JS here" spellcheck="false" oninput="runPreview()"></textarea>
+                <div class="panel-header"><label>JS</label><button class="btn" style="background:#f7df1e;color:black" onclick="saveFile('js')">Save</button></div>
+                <textarea id="js-code" oninput="runPreview()"></textarea>
+            </div>
+
+            <div id="panel-py" class="panel">
+                <div class="panel-header"><label>Python</label><button class="btn py-btn" onclick="saveFile('py')">Save .py</button></div>
+                <textarea id="py-code" placeholder="# Python code goes here... (Preview not available for .py)"></textarea>
             </div>
         </div>
 
@@ -229,44 +170,57 @@
 
 <footer>
     <div id="theme-status">● Mode: Dark | UTF-8</div>
-    <div>Designed by Kaushal • v1.0.6</div>
+    <div>Designed by Kaushal • v1.0.7</div>
 </footer>
 
-<div id="helpModal" class="modal">
-    <div class="modal-content">
-        <h3>User Guide</h3>
-        <p style="font-size: 13px; color: #ccc; line-height: 1.6;">Tabs ka use karein HTML, CSS aur JS ke beech switch karne ke liye. Run button se output dekhein.</p>
-        <button class="close-btn" onclick="hideModal('helpModal')">Samajh Gaya</button>
-    </div>
-</div>
-
-<div id="devModal" class="modal">
-    <div class="modal-content">
-        <h3>Developer Info</h3>
-        <p style="font-size: 15px; color: #f7df1e; font-weight: bold;">Kaushal</p>
-        <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Build Version: 1.0.6 Pro</p>
-        <button class="close-btn" onclick="hideModal('devModal')">Close</button>
-    </div>
-</div>
+<div id="helpModal" class="modal"><div class="modal-content"><h3>User Guide</h3><p>File manager se file open karne ke liye 'Open File' par click karein. Python support add kar diya gaya hai.</p><button class="close-btn" onclick="hideModal('helpModal')">Close</button></div></div>
+<div id="devModal" class="modal"><div class="modal-content"><h3>Kaushal</h3><p>Build v1.0.7 (Py Support + File Opener)</p><button class="close-btn" onclick="hideModal('devModal')">Close</button></div></div>
 
 <script>
-    // Tab Switching
+    // --- File System (Open from File Manager) ---
+    function openLocalFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        const ext = file.name.split('.').pop().toLowerCase();
+
+        reader.onload = function(e) {
+            const content = e.target.result;
+            if (ext === 'html') { switchTab('html'); document.getElementById('html-code').value = content; }
+            else if (ext === 'css') { switchTab('css'); document.getElementById('css-code').value = content; }
+            else if (ext === 'js') { switchTab('js'); document.getElementById('js-code').value = content; }
+            else if (ext === 'py') { switchTab('py'); document.getElementById('py-code').value = content; }
+            else { alert("Sirf .html, .css, .js, .py files allow hain!"); }
+            runPreview();
+        };
+        reader.readAsText(file);
+    }
+
+    // --- Tab Switching ---
     function switchTab(type) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        
         document.getElementById('tab-' + type).classList.add('active');
         document.getElementById('panel-' + type).classList.add('active');
     }
 
-    // Tools System
-    function updateEditorStyle() {
-        const size = document.getElementById('font-size').value;
-        const family = document.getElementById('font-family').value;
-        document.querySelectorAll('textarea').forEach(t => {
-            t.style.fontSize = size;
-            t.style.fontFamily = family;
-        });
+    // --- Search Feature ---
+    function searchInEditor(val) {
+        const activePanel = document.querySelector('.panel.active textarea');
+        if(!val) return;
+        const index = activePanel.value.indexOf(val);
+        if(index !== -1) {
+            activePanel.focus();
+            activePanel.setSelectionRange(index, index + val.length);
+        }
+    }
+
+    // --- UI Controls ---
+    function updateStyle() {
+        const sz = document.getElementById('font-size').value;
+        const fm = document.getElementById('font-family').value;
+        document.querySelectorAll('textarea').forEach(t => { t.style.fontSize = sz; t.style.fontFamily = fm; });
     }
 
     function toggleTheme() {
@@ -275,7 +229,6 @@
         document.getElementById('theme-status').innerText = `● Mode: ${isLight ? 'Light' : 'Dark'} | UTF-8`;
     }
 
-    // Core Editor Functions
     function runPreview() {
         const html = document.getElementById("html-code").value;
         const css = "<style>" + document.getElementById("css-code").value + "</style>";
@@ -288,56 +241,23 @@
 
     function saveFile(type) {
         const content = document.getElementById(type + "-code").value;
-        const filename = type === 'html' ? 'index.html' : type === 'css' ? 'style.css' : 'script.js';
-        if(!content.trim()) return alert("File is empty!");
+        const filename = `file.${type === 'py' ? 'py' : type}`;
         const blob = new Blob([content], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = url; a.download = filename;
-        a.click();
+        a.href = url; a.download = filename; a.click();
     }
 
+    function clearAll() { if(confirm("Clear everything?")) { document.querySelectorAll('textarea').forEach(t => t.value = ''); runPreview(); } }
     function showModal(id) { document.getElementById(id).style.display = 'flex'; }
     function hideModal(id) { document.getElementById(id).style.display = 'none'; }
-    
-    function clearAll() {
-        if(confirm("Clear all code?")) {
-            document.querySelectorAll('textarea').forEach(t => t.value = '');
-            runPreview();
-        }
-    }
-
-    function showShortcuts() {
-        alert("Ctrl+Enter: Run\nCtrl+S: Save HTML\nCtrl+Q: Clear All");
-    }
-
-    window.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
-        if (e.ctrlKey && e.key === 's') { e.preventDefault(); saveFile('html'); }
-    });
-
-    // PWA Install Prompt
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('installBtn').style.display = 'flex';
-    });
-
-    document.getElementById('installBtn').addEventListener('click', () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt = null;
-        }
-    });
+    function showShortcuts() { alert("Ctrl+Enter: Run\nTab: Switch Files\nFile Manager se open karne ke liye 'Open File' use karein."); }
 </script>
 
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('SW Registered'))
-            .catch(err => console.log('SW Registration Failed', err));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
         });
     }
 </script>
