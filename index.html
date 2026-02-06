@@ -3,66 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevStudio Pro PWA</title>
+    <title>DevStudio Pro - Ultimate Editor</title>
     
     <meta name="theme-color" content="#007acc">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="Kaushalji.png">
 
     <style>
+        :root { --primary: #007acc; --bg: #0f0f0f; --panel: #1a1a1a; --border: #333; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: white; height: 100vh; display: flex; flex-direction: column; }
-        header { background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; border-bottom: 2px solid #333; align-items: center; }
-        .logo { font-size: 20px; font-weight: bold; color: #007acc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* Professional Toolbar */
+        .top-nav { background: var(--panel); padding: 5px 15px; display: flex; gap: 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .menu-item { cursor: pointer; color: #ccc; transition: 0.2s; }
+        .menu-item:hover { color: white; }
+
+        header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); }
+        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo-img { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
+        .logo-text { font-size: 18px; font-weight: bold; color: var(--primary); }
+
+        /* Main App Layout */
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 25px; }
+        .sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; }
+        .sidebar-icon:hover { color: white; transform: scale(1.1); }
+
         .workspace { display: flex; flex: 1; overflow: hidden; }
-        @media (max-width: 768px) { .workspace { flex-direction: column; overflow-y: auto; } }
-        .editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid #333; overflow-y: auto; }
+        @media (max-width: 768px) { .workspace { flex-direction: column; } }
+
+        .editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid var(--border); overflow-y: auto; background: #1e1e1e; }
         @media (max-width: 768px) { .editor-panels { width: 100%; } }
-        .panel { padding: 10px; border-bottom: 1px solid #333; }
-        textarea { width: 100%; height: 200px; background: #1e1e1e; color: #d4d4d4; border: 1px solid #444; padding: 10px; font-family: monospace; outline: none; border-radius: 4px; resize: vertical; }
-        .preview-area { width: 40%; background: white; min-height: 300px; }
+
+        .panel { padding: 5px 10px; border-bottom: 1px solid var(--border); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+        .panel-header label { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+        textarea { width: 100%; height: 170px; background: #1e1e1e; color: #9cdcfe; border: 1px solid transparent; padding: 12px; font-family: 'Consolas', 'Courier New', monospace; outline: none; font-size: 14px; line-height: 1.6; border-radius: 4px; resize: none; }
+        textarea:focus { border-left: 2px solid var(--primary); background: #252526; }
+
+        .preview-area { width: 40%; background: white; position: relative; }
         @media (max-width: 768px) { .preview-area { width: 100%; height: 400px; } }
         iframe { width: 100%; height: 100%; border: none; }
-        .btn-save { padding: 8px 15px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
+
+        /* Professional Buttons */
+        .btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
         .html-btn { background: #e34f26; color: white; }
         .css-btn { background: #007acc; color: white; }
         .js-btn { background: #f7df1e; color: black; }
-        #installBtn { display: none; background: #4caf50; color: white; padding: 8px 15px; border-radius: 4px; cursor: pointer; border: none; font-weight: bold; }
+        .run-btn { background: #4caf50; color: white; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+
+        footer { background: var(--primary); color: white; padding: 3px 12px; font-size: 11px; display: flex; justify-content: space-between; font-weight: 500; }
+        
+        /* Modal Style */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background: var(--panel); padding: 25px; border-radius: 12px; width: 320px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-content h3 { margin-bottom: 15px; color: var(--primary); }
+        .close-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; margin-top: 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
     </style>
 </head>
 <body>
 
+<div class="top-nav">
+    <div class="menu-item" onclick="showShortcuts()">File</div>
+    <div class="menu-item" onclick="clearAll()">Edit</div>
+    <div class="menu-item" onclick="alert('Searching feature coming soon!')">Selection</div>
+    <div class="menu-item" onclick="showModal('helpModal')">Help</div>
+    <div class="menu-item" onclick="showModal('devModal')" style="color: #f7df1e;">Developer</div>
+</div>
+
 <header>
-    <div class="logo">DevStudio v1.0</div>
-    <button id="installBtn">Install App</button>
+    <div class="logo-section">
+        <img src="Kaushalji.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1005/1005141.png'">
+        <div class="logo-text">DevStudio Pro</div>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install App</button>
+        <button class="btn run-btn" onclick="runPreview()">▶ Run (Ctrl+Enter)</button>
+    </div>
 </header>
 
-<div class="workspace">
-    <div class="editor-panels">
-        <div class="panel">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
-                <label>HTML</label>
-                <button class="btn-save html-btn" onclick="saveFile('html')">Save HTML</button>
+<div class="main-layout">
+    <div class="sidebar">
+        <div class="sidebar-icon" title="Explorer">📂</div>
+        <div class="sidebar-icon" title="Search">🔍</div>
+        <div class="sidebar-icon" title="Git">🌿</div>
+        <div class="sidebar-icon" title="Extensions">🧩</div>
+        <div style="flex: 1;"></div>
+        <div class="sidebar-icon" title="Settings" style="margin-bottom: 15px;">⚙️</div>
+    </div>
+
+    <div class="workspace">
+        <div class="editor-panels">
+            <div class="panel">
+                <div class="panel-header">
+                    <label>index.html</label>
+                    <button class="btn html-btn" onclick="saveFile('html')">Save HTML</button>
+                </div>
+                <textarea id="html-code" placeholder="" spellcheck="false" oninput="runPreview()"></textarea>
             </div>
-            <textarea id="html-code" placeholder="<html>..." oninput="runPreview()"></textarea>
+            <div class="panel">
+                <div class="panel-header">
+                    <label>style.css</label>
+                    <button class="btn css-btn" onclick="saveFile('css')">Save CSS</button>
+                </div>
+                <textarea id="css-code" placeholder="/* CSS Code Yahan Likhein */" spellcheck="false" oninput="runPreview()"></textarea>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <label>script.js</label>
+                    <button class="btn js-btn" onclick="saveFile('js')">Save JS</button>
+                </div>
+                <textarea id="js-code" placeholder="// JS Code Yahan Likhein" spellcheck="false" oninput="runPreview()"></textarea>
+            </div>
         </div>
-        <div class="panel">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
-                <label>CSS</label>
-                <button class="btn-save css-btn" onclick="saveFile('css')">Save CSS</button>
-            </div>
-            <textarea id="css-code" placeholder="body { ... }" oninput="runPreview()"></textarea>
-        </div>
-        <div class="panel">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
-                <label>JS</label>
-                <button class="btn-save js-btn" onclick="saveFile('js')">Save JS</button>
-            </div>
-            <textarea id="js-code" placeholder="console.log('Hi');" oninput="runPreview()"></textarea>
+
+        <div class="preview-area">
+            <iframe id="output"></iframe>
         </div>
     </div>
-    <div class="preview-area">
-        <iframe id="output"></iframe>
+</div>
+
+<footer>
+    <div>● Connection: Online | UTF-8</div>
+    <div>Designed by Kaushal • v1.0.5</div>
+</footer>
+
+<div id="helpModal" class="modal">
+    <div class="modal-content">
+        <h3>User Guide</h3>
+        <p style="font-size: 13px; color: #ccc; line-height: 1.6;">DevStudio ek PWA hai. Aap bina internet ke bhi coding kar sakte hain. 'Save' button se files direct download karein.</p>
+        <button class="close-btn" onclick="hideModal('helpModal')">Samajh Gaya</button>
+    </div>
+</div>
+
+<div id="devModal" class="modal">
+    <div class="modal-content">
+        <img src="Kaushalji.png" style="width: 60px; border-radius: 50%; margin-bottom: 10px;" onerror="this.style.display='none'">
+        <h3>Developer Info</h3>
+        <p style="font-size: 15px; color: #f7df1e; font-weight: bold;">Kaushal</p>
+        <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Build Version: 1.0.5 Pro<br>App Status: Stable</p>
+        <button class="close-btn" onclick="hideModal('devModal')">Close</button>
     </div>
 </div>
 
@@ -70,8 +153,8 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker Registered!', reg))
-            .catch(err => console.log('Service Worker Failed!', err));
+            .then(reg => console.log('Service Worker Live!'))
+            .catch(err => console.error('PWA Error:', err));
         });
     }
 </script>
@@ -80,26 +163,24 @@
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
 
-    // Install Prompt Logic
+    // Install Prompt Handle
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        installBtn.style.display = 'block';
+        installBtn.style.display = 'flex';
     });
 
     installBtn.addEventListener('click', () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choice) => {
-                if (choice.outcome === 'accepted') {
-                    installBtn.style.display = 'none';
-                }
+                if (choice.outcome === 'accepted') installBtn.style.display = 'none';
                 deferredPrompt = null;
             });
         }
     });
 
-    // Preview Logic
+    // Preview System
     function runPreview() {
         const html = document.getElementById("html-code").value;
         const css = "<style>" + document.getElementById("css-code").value + "</style>";
@@ -110,28 +191,47 @@
         outputFrame.close();
     }
 
-    // Download Logic
+    // Save/Download System
     function saveFile(type) {
         const content = document.getElementById(type + "-code").value;
         const filename = type === 'html' ? 'index.html' : type === 'css' ? 'style.css' : 'script.js';
         
-        if(!content.trim()) {
-            return alert("Khaali file save nahi ho sakti!");
-        }
+        if(!content.trim()) return alert("Khaali file save nahi ho sakti!");
         
         const blob = new Blob([content], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = url; 
-        a.download = filename; 
-        document.body.appendChild(a);
-        a.click();
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click();
         
         setTimeout(() => {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-        }, 0);
+        }, 100);
     }
+
+    // Tools & Shortcuts
+    function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+    
+    function clearAll() {
+        if(confirm("Kya aap saara code delete karna chahte hain?")) {
+            document.querySelectorAll('textarea').forEach(t => t.value = '');
+            runPreview();
+        }
+    }
+
+    function showShortcuts() {
+        alert("Keyboard Shortcuts:\n\n• Ctrl + Enter : Run Code\n• Ctrl + S : Save HTML\n• Ctrl + Q : Clear All");
+    }
+
+    // Listen for Shortcuts
+    window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
+        if (e.ctrlKey && e.key === 's') { e.preventDefault(); saveFile('html'); }
+        if (e.ctrlKey && e.key === 'q') { e.preventDefault(); clearAll(); }
+    });
 </script>
+
 </body>
 </html>
