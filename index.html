@@ -7,35 +7,27 @@
     
     <meta name="theme-color" content="#007acc">
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="Kaushalji.png">
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: white; height: 100vh; display: flex; flex-direction: column; }
-
-        header { background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; border-bottom: 2px solid #333; }
+        header { background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; border-bottom: 2px solid #333; align-items: center; }
         .logo { font-size: 20px; font-weight: bold; color: #007acc; }
-
-        /* Flexible Layout */
         .workspace { display: flex; flex: 1; overflow: hidden; }
         @media (max-width: 768px) { .workspace { flex-direction: column; overflow-y: auto; } }
-
         .editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid #333; overflow-y: auto; }
-        @media (max-width: 768px) { .editor-panels { width: 100%; overflow-y: visible; } }
-
+        @media (max-width: 768px) { .editor-panels { width: 100%; } }
         .panel { padding: 10px; border-bottom: 1px solid #333; }
-        textarea { width: 100%; height: 200px; background: #1e1e1e; color: #d4d4d4; border: 1px solid #444; padding: 10px; font-family: monospace; outline: none; }
-
+        textarea { width: 100%; height: 200px; background: #1e1e1e; color: #d4d4d4; border: 1px solid #444; padding: 10px; font-family: monospace; outline: none; border-radius: 4px; resize: vertical; }
         .preview-area { width: 40%; background: white; min-height: 300px; }
         @media (max-width: 768px) { .preview-area { width: 100%; height: 400px; } }
-        
         iframe { width: 100%; height: 100%; border: none; }
-
-        .btn-save { padding: 8px 15px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; margin-left: 5px; }
+        .btn-save { padding: 8px 15px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .html-btn { background: #e34f26; color: white; }
         .css-btn { background: #007acc; color: white; }
         .js-btn { background: #f7df1e; color: black; }
-        
-        #installBtn { display: none; background: #4caf50; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        #installBtn { display: none; background: #4caf50; color: white; padding: 8px 15px; border-radius: 4px; cursor: pointer; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -48,72 +40,97 @@
 <div class="workspace">
     <div class="editor-panels">
         <div class="panel">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
                 <label>HTML</label>
                 <button class="btn-save html-btn" onclick="saveFile('html')">Save HTML</button>
             </div>
-            <textarea id="html-code" oninput="runPreview()"></textarea>
+            <textarea id="html-code" placeholder="<html>..." oninput="runPreview()"></textarea>
         </div>
         <div class="panel">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
                 <label>CSS</label>
                 <button class="btn-save css-btn" onclick="saveFile('css')">Save CSS</button>
             </div>
-            <textarea id="css-code" oninput="runPreview()"></textarea>
+            <textarea id="css-code" placeholder="body { ... }" oninput="runPreview()"></textarea>
         </div>
         <div class="panel">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
                 <label>JS</label>
                 <button class="btn-save js-btn" onclick="saveFile('js')">Save JS</button>
             </div>
-            <textarea id="js-code" oninput="runPreview()"></textarea>
+            <textarea id="js-code" placeholder="console.log('Hi');" oninput="runPreview()"></textarea>
         </div>
     </div>
-
     <div class="preview-area">
         <iframe id="output"></iframe>
     </div>
 </div>
 
 <script>
-    // PWA: Service Worker Register
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker Registered!', reg))
+            .catch(err => console.log('Service Worker Failed!', err));
         });
     }
-        </script>
-    <script>
-        // PWA: Install Button Logic
+</script>
+
+<script>
     let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    // Install Prompt Logic
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        document.getElementById('installBtn').style.display = 'block';
+        installBtn.style.display = 'block';
     });
 
-    document.getElementById('installBtn').addEventListener('click', () => {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted') document.getElementById('installBtn').style.display = 'none';
-        });
+    installBtn.addEventListener('click', () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choice) => {
+                if (choice.outcome === 'accepted') {
+                    installBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
+            });
+        }
     });
 
+    // Preview Logic
     function runPreview() {
         const html = document.getElementById("html-code").value;
         const css = "<style>" + document.getElementById("css-code").value + "</style>";
         const js = "<script>" + document.getElementById("js-code").value + "<\/script>";
         const outputFrame = document.getElementById("output").contentWindow.document;
-        outputFrame.open(); outputFrame.write(html + css + js); outputFrame.close();
+        outputFrame.open(); 
+        outputFrame.write(html + css + js); 
+        outputFrame.close();
     }
 
+    // Download Logic
     function saveFile(type) {
-        let content = document.getElementById(type + "-code").value;
-        let filename = type === 'html' ? 'index.html' : type === 'css' ? 'style.css' : 'script.js';
-        if(!content.trim()) return alert("Khaali file!");
+        const content = document.getElementById(type + "-code").value;
+        const filename = type === 'html' ? 'index.html' : type === 'css' ? 'style.css' : 'script.js';
+        
+        if(!content.trim()) {
+            return alert("Khaali file save nahi ho sakti!");
+        }
+        
         const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+        a.href = url; 
+        a.download = filename; 
+        document.body.appendChild(a);
+        a.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 </script>
 </body>
