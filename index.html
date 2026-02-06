@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Code Editor - Download System</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #0f0f0f; color: white; 
+            height: 100vh; display: flex; flex-direction: column; 
+        }
+
+        /* Header & Navigation */
+        header { 
+            background: #1a1a1a; padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid #333;
+        }
+        .logo { font-size: 20px; font-weight: bold; color: #007acc; }
+        
+        /* Main Workspace */
+        .workspace { display: flex; flex: 1; overflow: hidden; }
+        
+        .editor-panels { 
+            width: 60%; display: flex; flex-direction: column; 
+            border-right: 2px solid #333; overflow-y: auto; 
+        }
+        
+        .panel { flex: 1; display: flex; flex-direction: column; padding: 10px; border-bottom: 1px solid #333; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        label { font-size: 12px; font-weight: bold; color: #888; }
+        
+        textarea { 
+            width: 100%; height: 150px; background: #1e1e1e; color: #d4d4d4; 
+            border: 1px solid #444; padding: 10px; font-family: 'Consolas', monospace; 
+            border-radius: 4px; resize: vertical; outline: none;
+        }
+
+        /* Preview Window */
+        .preview-area { width: 40%; background: white; display: flex; flex-direction: column; }
+        .preview-label { background: #ddd; color: #333; padding: 5px; font-size: 12px; text-align: center; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Save Buttons */
+        .btn-save { 
+            padding: 5px 12px; border-radius: 4px; border: none; 
+            cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s;
+        }
+        .html-btn { background: #e34f26; color: white; }
+        .css-btn { background: #007acc; color: white; }
+        .js-btn { background: #f7df1e; color: black; }
+        .btn-save:hover { opacity: 0.8; transform: translateY(-1px); }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">DevStudio v1.0</div>
+    <div style="font-size: 13px; color: #aaa;">Code likhein aur apne system mein save karein</div>
+</header>
+
+<div class="workspace">
+    <div class="editor-panels">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <label>INDEX.HTML</label>
+                <button class="btn-save html-btn" onclick="saveFile('html')">Save HTML</button>
+            </div>
+            <textarea id="html-code" placeholder="<html>...</html>" oninput="runPreview()"></textarea>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <label>STYLE.CSS</label>
+                <button class="btn-save css-btn" onclick="saveFile('css')">Save CSS</button>
+            </div>
+            <textarea id="css-code" placeholder="body { background: #000; }" oninput="runPreview()"></textarea>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <label>SCRIPT.JS</label>
+                <button class="btn-save js-btn" onclick="saveFile('js')">Save JS</button>
+            </div>
+            <textarea id="js-code" placeholder="alert('Hello!');" oninput="runPreview()"></textarea>
+        </div>
+
+    </div>
+
+    <div class="preview-area">
+        <div class="preview-label">LIVE PREVIEW</div>
+        <iframe id="output"></iframe>
+    </div>
+</div>
+
+<script>
+    // 1. Live Preview Function
+    function runPreview() {
+        const html = document.getElementById("html-code").value;
+        const css = "<style>" + document.getElementById("css-code").value + "</style>";
+        const js = "<script>" + document.getElementById("js-code").value + "<\/script>";
+        
+        const outputFrame = document.getElementById("output").contentWindow.document;
+        outputFrame.open();
+        outputFrame.write(html + css + js);
+        outputFrame.close();
+    }
+
+    // 2. Download/Save System Function
+    function saveFile(type) {
+        let content = "";
+        let filename = "";
+
+        if(type === 'html') {
+            content = document.getElementById("html-code").value;
+            filename = "index.html";
+        } else if(type === 'css') {
+            content = document.getElementById("css-code").value;
+            filename = "style.css";
+        } else if(type === 'js') {
+            content = document.getElementById("js-code").value;
+            filename = "script.js";
+        }
+
+        if(!content.trim()) {
+            alert("Khaali file save nahi ki ja sakti!");
+            return;
+        }
+
+        // Blob banakar user ke browser se file download karwana
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Memory saaf karna
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    }
+</script>
+
+</body>
+</html>
