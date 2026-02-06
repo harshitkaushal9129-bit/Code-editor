@@ -3,148 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevStudio Pro - Professional IDE</title>
+    <title>DevStudio Pro - Ultimate Editor</title>
     
     <meta name="theme-color" content="#007acc">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="Kaushalji.png">
 
     <style>
-        :root { --bg: #1e1e1e; --side: #333333; --activity: #2c2c2c; --text: #cccccc; --accent: #007acc; --border: #3c3c3c; }
+        :root { --primary: #007acc; --bg: #0f0f0f; --panel: #1a1a1a; --border: #333; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* Activity Bar (Side) */
-        .main-container { display: flex; flex: 1; overflow: hidden; }
-        .activity-bar { width: 50px; background: var(--activity); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 20px; border-right: 1px solid var(--border); }
-        .act-icon { cursor: pointer; font-size: 22px; color: #858585; }
-        .act-icon:hover, .act-icon.active { color: white; }
+        /* Professional Toolbar */
+        .top-nav { background: var(--panel); padding: 5px 15px; display: flex; gap: 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .menu-item { cursor: pointer; color: #ccc; transition: 0.2s; }
+        .menu-item:hover { color: white; }
 
-        /* Sidebar Explorer */
-        .sidebar { width: 200px; background: #252526; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        @media (max-width: 768px) { .sidebar { display: none; } }
-        .side-title { padding: 10px; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; }
-        .file { padding: 8px 15px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .file:hover { background: #2a2d2e; }
-        .file.active { background: #37373d; }
+        header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); }
+        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo-img { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
+        .logo-text { font-size: 18px; font-weight: bold; color: var(--primary); }
 
-        /* Editor & Tabs */
-        .editor-area { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
-        .tabs { background: #2d2d2d; display: flex; height: 35px; border-bottom: 1px solid var(--border); }
-        .tab { padding: 0 20px; font-size: 13px; color: #969696; background: #2d2d2d; border-right: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; height: 100%; }
-        .tab.active { background: var(--bg); color: white; border-top: 1px solid var(--accent); }
+        /* Main App Layout */
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 25px; }
+        .sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; }
+        .sidebar-icon:hover { color: white; transform: scale(1.1); }
 
-        .code-container { flex: 1; position: relative; }
-        textarea { position: absolute; width: 100%; height: 100%; background: var(--bg); color: #9cdcfe; border: none; padding: 20px; font-family: 'Consolas', monospace; font-size: 14px; outline: none; resize: none; display: none; line-height: 1.6; }
-        textarea.active { display: block; }
+        .workspace { display: flex; flex: 1; overflow: hidden; }
+        @media (max-width: 768px) { .workspace { flex-direction: column; } }
 
-        /* Preview Area */
-        .preview-area { width: 40%; background: white; display: flex; flex-direction: column; }
-        @media (max-width: 768px) { .preview-area { width: 100%; height: 300px; } }
-        .preview-bar { background: #f3f3f3; color: #333; padding: 5px 12px; font-size: 12px; font-weight: bold; border-bottom: 1px solid #ddd; }
-        iframe { flex: 1; border: none; background: white; }
+        .editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid var(--border); overflow-y: auto; background: #1e1e1e; }
+        @media (max-width: 768px) { .editor-panels { width: 100%; } }
 
-        /* Status Bar (Bottom) */
-        .status-bar { background: var(--accent); height: 22px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; font-size: 12px; color: white; }
+        .panel { padding: 5px 10px; border-bottom: 1px solid var(--border); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+        .panel-header label { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+        textarea { width: 100%; height: 170px; background: #1e1e1e; color: #9cdcfe; border: 1px solid transparent; padding: 12px; font-family: 'Consolas', 'Courier New', monospace; outline: none; font-size: 14px; line-height: 1.6; border-radius: 4px; resize: none; }
+        textarea:focus { border-left: 2px solid var(--primary); background: #252526; }
+
+        .preview-area { width: 40%; background: white; position: relative; }
+        @media (max-width: 768px) { .preview-area { width: 100%; height: 400px; } }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Professional Buttons */
+        .btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .html-btn { background: #e34f26; color: white; }
+        .css-btn { background: #007acc; color: white; }
+        .js-btn { background: #f7df1e; color: black; }
+        .run-btn { background: #4caf50; color: white; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+
+        footer { background: var(--primary); color: white; padding: 3px 12px; font-size: 11px; display: flex; justify-content: space-between; font-weight: 500; }
+        
+        /* Modal Style */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background: var(--panel); padding: 25px; border-radius: 12px; width: 320px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-content h3 { margin-bottom: 15px; color: var(--primary); }
+        .close-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; margin-top: 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <div class="activity-bar">
-        <div class="act-icon active">📂</div>
-        <div class="act-icon">🔍</div>
-        <div class="act-icon">⚙️</div>
-        <div style="flex:1"></div>
-        <div id="installBtn" class="act-icon" title="Install App" style="display:none; color:#4caf50;">📥</div>
-    </div>
+<div class="top-nav">
+    <div class="menu-item" onclick="showShortcuts()">File</div>
+    <div class="menu-item" onclick="clearAll()">Edit</div>
+    <div class="menu-item" onclick="alert('Searching feature coming soon!')">Selection</div>
+    <div class="menu-item" onclick="showModal('helpModal')">Help</div>
+    <div class="menu-item" onclick="showModal('devModal')" style="color: #f7df1e;">Developer</div>
+</div>
 
+<header>
+    <div class="logo-section">
+        <img src="Kaushalji.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1005/1005141.png'">
+        <div class="logo-text">DevStudio Pro</div>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install App</button>
+        <button class="btn run-btn" onclick="runPreview()">▶ Run (Ctrl+Enter)</button>
+    </div>
+</header>
+
+<div class="main-layout">
     <div class="sidebar">
-        <div class="side-title">Explorer</div>
-        <div class="file active" onclick="switchFile('html')">📄 index.html</div>
-        <div class="file" onclick="switchFile('css')">🎨 style.css</div>
-        <div class="file" onclick="switchFile('js')">⚡ script.js</div>
+        <div class="sidebar-icon" title="Explorer">📂</div>
+        <div class="sidebar-icon" title="Search">🔍</div>
+        <div class="sidebar-icon" title="Git">🌿</div>
+        <div class="sidebar-icon" title="Extensions">🧩</div>
+        <div style="flex: 1;"></div>
+        <div class="sidebar-icon" title="Settings" style="margin-bottom: 15px;">⚙️</div>
     </div>
 
-    <div class="editor-area">
-        <div class="tabs">
-            <div id="tab-html" class="tab active" onclick="switchFile('html')">index.html</div>
-            <div id="tab-css" class="tab" onclick="switchFile('css')">style.css</div>
-            <div id="tab-js" class="tab" onclick="switchFile('js')">script.js</div>
+    <div class="workspace">
+        <div class="editor-panels">
+            <div class="panel">
+                <div class="panel-header">
+                    <label>index.html</label>
+                    <button class="btn html-btn" onclick="saveFile('html')">Save HTML</button>
+                </div>
+                <textarea id="html-code" placeholder="" spellcheck="false" oninput="runPreview()"></textarea>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <label>style.css</label>
+                    <button class="btn css-btn" onclick="saveFile('css')">Save CSS</button>
+                </div>
+                <textarea id="css-code" placeholder="/* CSS Code Yahan Likhein */" spellcheck="false" oninput="runPreview()"></textarea>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <label>script.js</label>
+                    <button class="btn js-btn" onclick="saveFile('js')">Save JS</button>
+                </div>
+                <textarea id="js-code" placeholder="// JS Code Yahan Likhein" spellcheck="false" oninput="runPreview()"></textarea>
+            </div>
         </div>
-        <div class="code-container">
-            <textarea id="html-ed" class="active" oninput="run()" spellcheck="false" placeholder=""></textarea>
-            <textarea id="css-ed" oninput="run()" spellcheck="false" placeholder="/* CSS */"></textarea>
-            <textarea id="js-ed" oninput="run()" spellcheck="false" placeholder="// JS"></textarea>
-        </div>
-    </div>
 
-    <div class="preview-area">
-        <div class="preview-bar">BROWSER PREVIEW</div>
-        <iframe id="res"></iframe>
+        <div class="preview-area">
+            <iframe id="output"></iframe>
+        </div>
     </div>
 </div>
 
-<div class="status-bar">
-    <div>Ready</div>
-    <div>DevStudio v1.0.8 | Made by Kaushal</div>
+<footer>
+    <div>● Connection: Online | UTF-8</div>
+    <div>Designed by Kaushal • v1.0.5</div>
+</footer>
+
+<div id="helpModal" class="modal">
+    <div class="modal-content">
+        <h3>User Guide</h3>
+        <p style="font-size: 13px; color: #ccc; line-height: 1.6;">DevStudio ek PWA hai. Aap bina internet ke bhi coding kar sakte hain. 'Save' button se files direct download karein.</p>
+        <button class="close-btn" onclick="hideModal('helpModal')">Samajh Gaya</button>
+    </div>
+</div>
+
+<div id="devModal" class="modal">
+    <div class="modal-content">
+        <img src="Kaushalji.png" style="width: 60px; border-radius: 50%; margin-bottom: 10px;" onerror="this.style.display='none'">
+        <h3>Developer Info</h3>
+        <p style="font-size: 15px; color: #f7df1e; font-weight: bold;">Kaushal</p>
+        <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Build Version: 1.0.5 Pro<br>App Status: Stable</p>
+        <button class="close-btn" onclick="hideModal('devModal')">Close</button>
+    </div>
 </div>
 
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
-            .then(() => console.log("PWA: Ready"))
-            .catch(err => console.log("PWA: Failed", err));
+            .then(reg => console.log('Service Worker Live!'))
+            .catch(err => console.error('PWA Error:', err));
         });
     }
 </script>
 
 <script>
-    let currentFile = 'html';
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
 
-    // File Switching Logic
-    function switchFile(type) {
-        currentFile = type;
-        // Tabs update
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('tab-' + type).classList.add('active');
-        // Textarea update
-        document.querySelectorAll('textarea').forEach(t => t.classList.remove('active'));
-        document.getElementById(type + '-ed').classList.add('active');
-        // Sidebar update
-        document.querySelectorAll('.file').forEach(f => f.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-    }
-
-    // Live Preview Logic
-    function run() {
-        const h = document.getElementById('html-ed').value;
-        const c = "<style>" + document.getElementById('css-ed').value + "</style>";
-        const j = "<script>" + document.getElementById('js-ed').value + "<\/script>";
-        const target = document.getElementById('res').contentWindow.document;
-        target.open(); target.write(h + c + j); target.close();
-    }
-
-    // PWA Install Logic
-    let promptEvt;
+    // Install Prompt Handle
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
-        promptEvt = e;
-        document.getElementById('installBtn').style.display = 'block';
+        deferredPrompt = e;
+        installBtn.style.display = 'flex';
     });
 
-    document.getElementById('installBtn').onclick = () => {
-        if(promptEvt) {
-            promptEvt.prompt();
-            promptEvt.userChoice.then(res => {
-                if(res.outcome === 'accepted') document.getElementById('installBtn').style.display = 'none';
+    installBtn.addEventListener('click', () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choice) => {
+                if (choice.outcome === 'accepted') installBtn.style.display = 'none';
+                deferredPrompt = null;
             });
         }
-    };
+    });
+
+    // Preview System
+    function runPreview() {
+        const html = document.getElementById("html-code").value;
+        const css = "<style>" + document.getElementById("css-code").value + "</style>";
+        const js = "<script>" + document.getElementById("js-code").value + "<\/script>";
+        const outputFrame = document.getElementById("output").contentWindow.document;
+        outputFrame.open(); 
+        outputFrame.write(html + css + js); 
+        outputFrame.close();
+    }
+
+    // Save/Download System
+    function saveFile(type) {
+        const content = document.getElementById(type + "-code").value;
+        const filename = type === 'html' ? 'index.html' : type === 'css' ? 'style.css' : 'script.js';
+        
+        if(!content.trim()) return alert("Khaali file save nahi ho sakti!");
+        
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+    }
+
+    // Tools & Shortcuts
+    function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function hideModal(id) { document.getElementById(id).style.display = 'none'; }
     
-    // Default Run
-    run();
+    function clearAll() {
+        if(confirm("Kya aap saara code delete karna chahte hain?")) {
+            document.querySelectorAll('textarea').forEach(t => t.value = '');
+            runPreview();
+        }
+    }
+
+    function showShortcuts() {
+        alert("Keyboard Shortcuts:\n\n• Ctrl + Enter : Run Code\n• Ctrl + S : Save HTML\n• Ctrl + Q : Clear All");
+    }
+
+    // Listen for Shortcuts
+    window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
+        if (e.ctrlKey && e.key === 's') { e.preventDefault(); saveFile('html'); }
+        if (e.ctrlKey && e.key === 'q') { e.preventDefault(); clearAll(); }
+    });
 </script>
 
 </body>
