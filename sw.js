@@ -1,10 +1,31 @@
-const CACHE_NAME = 'devstudio-v1';
-const assets = ['./', './index.html', './manifest.json'];
+const CACHE_NAME = 'devstudio-cache-v1';
+const urlsToCache = [
+  './',
+  './index.html',
+  './manifest.json',
+  './kaushal.jpg'
+];
 
-self.addEventListener('install', (e) => {
-    e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(assets)));
+// Install Service Worker
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
 });
 
-self.addEventListener('fetch', (e) => {
-    e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+// Cache se response dena (Offline Support)
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        if (response) {
+          return response; // Cache se mila
+        }
+        return fetch(event.request); // Internet se laao
+      })
+  );
 });
