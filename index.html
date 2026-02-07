@@ -59,8 +59,9 @@
         .sidebar-icon:hover { color: white; transform: scale(1.1); }
 
         .editor-tabs { display: flex; background: #2d2d2d; border-bottom: 1px solid var(--border); overflow-x: auto; }
-        .tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #999; border-right: 1px solid var(--border); white-space: nowrap; }
+        .tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #999; border-right: 1px solid var(--border); white-space: nowrap; display: flex; align-items: center; gap: 10px; }
         .tab.active { background: var(--editor-bg); color: white; border-top: 2px solid var(--primary); }
+        .close-tab { color: #ff5f56; font-weight: bold; font-size: 12px; }
 
         .workspace { display: flex; flex: 1; overflow: hidden; }
         @media (max-width: 768px) { .workspace { flex-direction: column; } }
@@ -138,7 +139,7 @@
 </header>
 
 <div class="tools-bar">
-    <input type="file" id="file-input" accept=".html,.css,.js" onchange="openLocalFile(event)">
+    <input type="file" id="file-input" onchange="openLocalFile(event)">
     <select class="tool-select" id="font-size" onchange="updateStyle()">
         <option value="14px">14px</option>
         <option value="16px">16px</option>
@@ -162,7 +163,6 @@
     <div class="tag-pill" onclick="insertTag('<p>', '</p>')">P</div>
     <div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">LINK</div>
     <div class="tag-pill" onclick="insertTag('<img>', '')">IMG</div>
-    <div class="tag-pill" onclick="insertTag('<ul>\n  <li>', '</li>\n</ul>')">LIST</div>
 </div>
 
 <div class="main-layout">
@@ -177,25 +177,27 @@
 
     <div class="workspace">
         <div class="editor-panels">
-            <div class="editor-tabs">
+            <div class="editor-tabs" id="tabs-container">
                 <div class="tab active" id="tab-html" onclick="switchTab('html')">index.html</div>
                 <div class="tab" id="tab-css" onclick="switchTab('css')">style.css</div>
                 <div class="tab" id="tab-js" onclick="switchTab('js')">script.js</div>
             </div>
 
-            <div id="panel-html" class="panel active">
-                <div class="panel-header"><label>HTML</label><button class="btn" style="background:#e34f26;color:white" onclick="saveFile('html')">Save</button></div>
-                <textarea id="html-code" oninput="runPreview()" placeholder="<html>...</html>"></textarea>
-            </div>
+            <div id="panels-container" style="flex:1; display:flex; flex-direction:column;">
+                <div id="panel-html" class="panel active">
+                    <div class="panel-header"><label>HTML</label><button class="btn" style="background:#e34f26;color:white" onclick="saveFile('html')">Save</button></div>
+                    <textarea id="html-code" oninput="runPreview()" placeholder="<html>...</html>"></textarea>
+                </div>
 
-            <div id="panel-css" class="panel">
-                <div class="panel-header"><label>CSS</label><button class="btn" style="background:#007acc;color:white" onclick="saveFile('css')">Save</button></div>
-                <textarea id="css-code" oninput="runPreview()" placeholder="body { background: #000; }"></textarea>
-            </div>
+                <div id="panel-css" class="panel">
+                    <div class="panel-header"><label>CSS</label><button class="btn" style="background:#007acc;color:white" onclick="saveFile('css')">Save</button></div>
+                    <textarea id="css-code" oninput="runPreview()" placeholder="body { background: #000; }"></textarea>
+                </div>
 
-            <div id="panel-js" class="panel">
-                <div class="panel-header"><label>JS</label><button class="btn" style="background:#f7df1e;color:black" onclick="saveFile('js')">Save</button></div>
-                <textarea id="js-code" oninput="runPreview()" placeholder="console.log('Hello World');"></textarea>
+                <div id="panel-js" class="panel">
+                    <div class="panel-header"><label>JS</label><button class="btn" style="background:#f7df1e;color:black" onclick="saveFile('js')">Save</button></div>
+                    <textarea id="js-code" oninput="runPreview()" placeholder="console.log('Hello World');"></textarea>
+                </div>
             </div>
         </div>
 
@@ -213,7 +215,7 @@
 <div id="helpModal" class="modal">
     <div class="modal-content">
         <h3>User Guide</h3>
-        <p style="margin-top:10px; color:#ccc;">File manager से HTML, CSS या JS फाइल ओपन करें और लाइव कोडिंग का आनंद लें। शेयर बटन से अपना काम दोस्तों को भेजें।</p>
+        <p style="margin-top:10px; color:#ccc;">Koi bhi file open karein, wo naye tab mein khul jayegi. HTML, CSS aur JS ka live preview dikhega.</p>
         <button class="close-btn" onclick="hideModal('helpModal')">Close</button>
     </div>
 </div>
@@ -224,11 +226,7 @@
         <div class="shortcut-list">
             <div class="shortcut-item"><span>Run Code</span> <span class="kbd">Ctrl + Enter</span></div>
             <div class="shortcut-item"><span>Save File</span> <span class="kbd">Ctrl + S</span></div>
-            <div class="shortcut-item"><span>HTML Tab</span> <span class="kbd">Alt + 1</span></div>
-            <div class="shortcut-item"><span>CSS Tab</span> <span class="kbd">Alt + 2</span></div>
-            <div class="shortcut-item"><span>JS Tab</span> <span class="kbd">Alt + 3</span></div>
             <div class="shortcut-item"><span>Toggle Theme</span> <span class="kbd">Ctrl + T</span></div>
-            <div class="shortcut-item"><span>Clear All</span> <span class="kbd">Ctrl + Shift + X</span></div>
         </div>
         <button class="close-btn" onclick="hideModal('shortcutModal')">Got it!</button>
     </div>
@@ -240,32 +238,11 @@
             <img src="Kaushalji.png" class="dev-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
             <div class="dev-name">Kaushal</div>
             <div class="dev-info">Full Stack Web Developer & Designer</div>
-            
-            <div class="feature-grid">
-                <div class="feature-item">✓ PWA Enabled</div>
-                <div class="feature-item">✓ Share API</div>
-                <div class="feature-item">✓ Live Preview</div>
-                <div class="feature-item">✓ File Management</div>
-            </div>
-
-            <div style="font-size: 11px; color: var(--accent); margin-bottom: 10px;">Build Version: 1.0.8 (Stable)</div>
         </div>
-
         <div class="support-btns">
-            <a href="https://wa.me/9129191898" target="_blank" class="support-link whatsapp-btn">
-                <span>💬 WhatsApp Support</span>
-            </a>
-            <a href="tel:9129191898" class="support-link call-btn">
-                <span>📞 Call Developer</span>
-            </a>
+            <a href="https://wa.me/9129191898" target="_blank" class="support-link whatsapp-btn"><span>💬 WhatsApp Support</span></a>
+            <a href="tel:9129191898" class="support-link call-btn"><span>📞 Call Developer</span></a>
         </div>
-
-        <div class="qr-section">
-            <div class="qr-text">Scan to Support (UPI)</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mandavikaushal913@okaxis&pn=Kaushal" class="qr-img" alt="UPI QR">
-            <div style="font-size: 10px; color: #555; margin-top: 5px;">mandavikaushal913@okaxis</div>
-        </div>
-
         <button class="close-btn" onclick="hideModal('devModal')">Return to Editor</button>
     </div>
 </div>
@@ -277,10 +254,8 @@
             navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW Error: ", err));
         });
     }
-
         </script>
     <script>
-
     // --- PWA Install ---
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -299,78 +274,136 @@
         }
     });
 
-    // --- Keyboard Shortcuts ---
-    window.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
-        if (e.ctrlKey && e.key === 's') { 
-            e.preventDefault(); 
-            const currentTab = document.querySelector('.tab.active').id.split('-')[1];
-            saveFile(currentTab); 
-        }
-        if (e.altKey && e.key === '1') { e.preventDefault(); switchTab('html'); }
-        if (e.altKey && e.key === '2') { e.preventDefault(); switchTab('css'); }
-        if (e.altKey && e.key === '3') { e.preventDefault(); switchTab('js'); }
-        if (e.ctrlKey && e.key === 't') { e.preventDefault(); toggleTheme(); }
-        if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) { e.preventDefault(); clearAll(); }
-    });
+    // --- Dynamic Tab Logic ---
+    let extraFiles = [];
 
-    // --- Quick Tag Inserter ---
-    function insertTag(open, close) {
-        const textarea = document.getElementById('html-code');
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = textarea.value;
-        const before = text.substring(0, start);
-        const selected = text.substring(start, end);
-        const after = text.substring(end);
-
-        textarea.value = before + open + selected + close + after;
-        textarea.focus();
-        textarea.setSelectionRange(start + open.length, start + open.length + selected.length);
-        runPreview();
-    }
-
-    // --- Share Functionality ---
-    async function shareProject() {
-        const textToShare = `Check out my code on DevStudio Pro!\n\nBuild by Kaushal.`;
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'DevStudio Pro Code',
-                    text: textToShare,
-                    url: window.location.href
-                });
-            } catch (err) { console.log("Share failed:", err); }
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Share Link copied to clipboard!");
-        }
-    }
-
-    // --- Editor Functions ---
     function openLocalFile(event) {
         const file = event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
-        const ext = file.name.split('.').pop().toLowerCase();
+        const name = file.name;
+        const ext = name.split('.').pop().toLowerCase();
+
         reader.onload = function(e) {
             const content = e.target.result;
-            if (ext === 'html') { switchTab('html'); document.getElementById('html-code').value = content; }
-            else if (ext === 'css') { switchTab('css'); document.getElementById('css-code').value = content; }
-            else if (ext === 'js') { switchTab('js'); document.getElementById('js-code').value = content; }
+            
+            // If standard web files, update existing tabs, otherwise create new
+            if (name === "index.html") { document.getElementById('html-code').value = content; switchTab('html'); }
+            else if (name === "style.css") { document.getElementById('css-code').value = content; switchTab('css'); }
+            else if (name === "script.js") { document.getElementById('js-code').value = content; switchTab('js'); }
+            else {
+                createNewTab(name, content);
+            }
             runPreview();
         };
         reader.readAsText(file);
     }
 
+    function createNewTab(name, content) {
+        const id = name.replace(/\./g, '-');
+        if (document.getElementById('tab-' + id)) {
+            switchTab(id);
+            document.getElementById(id + '-code').value = content;
+            return;
+        }
+
+        extraFiles.push({id, name});
+
+        // Tab Create
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        tab.id = 'tab-' + id;
+        tab.innerHTML = `${name} <span class="close-tab" onclick="closeExtraTab(event, '${id}')">×</span>`;
+        tab.onclick = () => switchTab(id);
+        document.getElementById('tabs-container').appendChild(tab);
+
+        // Panel Create
+        const panel = document.createElement('div');
+        panel.className = 'panel';
+        panel.id = 'panel-' + id;
+        panel.innerHTML = `
+            <div class="panel-header"><label>${name.toUpperCase()}</label><button class="btn" style="background:var(--primary);color:white" onclick="saveFile('${id}')">Save</button></div>
+            <textarea id="${id}-code" oninput="runPreview()">${content}</textarea>
+        `;
+        document.getElementById('panels-container').appendChild(panel);
+        
+        switchTab(id);
+        updateStyle();
+    }
+
+    function closeExtraTab(e, id) {
+        e.stopPropagation();
+        document.getElementById('tab-' + id).remove();
+        document.getElementById('panel-' + id).remove();
+        extraFiles = extraFiles.filter(f => f.id !== id);
+        switchTab('html');
+    }
+
     function switchTab(type) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('tab-' + type).classList.add('active');
-        document.getElementById('panel-' + type).classList.add('active');
         
-        // Hide tags bar if not on HTML tab
-        document.getElementById('tags-bar').style.display = (type === 'html') ? 'flex' : 'none';
+        const targetTab = document.getElementById('tab-' + type);
+        const targetPanel = document.getElementById('panel-' + type);
+        
+        if(targetTab && targetPanel) {
+            targetTab.classList.add('active');
+            targetPanel.classList.add('active');
+        }
+        
+        document.getElementById('tags-bar').style.display = (type === 'html' || type.includes('html')) ? 'flex' : 'none';
+    }
+
+    function runPreview() {
+        let html = document.getElementById("html-code").value;
+        let css = "<style>" + document.getElementById("css-code").value + "</style>";
+        let js = "<script>" + document.getElementById("js-code").value + "<\/script>";
+        
+        // Add extra HTML/CSS/JS if opened
+        extraFiles.forEach(file => {
+            const content = document.getElementById(file.id + "-code").value;
+            if (file.name.endsWith('.html')) html += content;
+            else if (file.name.endsWith('.css')) css += "<style>" + content + "</style>";
+            else if (file.name.endsWith('.js')) js += "<script>" + content + "<\/script>";
+        });
+
+        const outputFrame = document.getElementById("output").contentWindow.document;
+        outputFrame.open(); 
+        outputFrame.write(html + css + js); 
+        outputFrame.close();
+    }
+
+    function saveFile(type) {
+        const area = document.getElementById(type + (type.includes('-') ? '-code' : '-code'));
+        const content = area.value;
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        // Handle dynamic naming
+        const fileName = type.includes('-') ? type.replace('-', '.') : `index.${type}`;
+        a.download = fileName;
+        a.click();
+    }
+
+    // Standard Tools
+    function insertTag(open, close) {
+        const activeTextarea = document.querySelector('.panel.active textarea');
+        if (!activeTextarea) return;
+        const start = activeTextarea.selectionStart;
+        const text = activeTextarea.value;
+        activeTextarea.value = text.substring(0, start) + open + text.substring(activeTextarea.selectionStart, activeTextarea.selectionEnd) + close + text.substring(activeTextarea.selectionEnd);
+        runPreview();
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+    }
+
+    function updateStyle() {
+        const sz = document.getElementById('font-size').value;
+        const fm = document.getElementById('font-family').value;
+        document.querySelectorAll('textarea').forEach(t => { t.style.fontSize = sz; t.style.fontFamily = fm; });
     }
 
     function searchInEditor(val) {
@@ -383,51 +416,16 @@
         }
     }
 
-    function updateStyle() {
-        const sz = document.getElementById('font-size').value;
-        const fm = document.getElementById('font-family').value;
-        document.querySelectorAll('textarea').forEach(t => { 
-            t.style.fontSize = sz; 
-            t.style.fontFamily = fm; 
-        });
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        document.getElementById('theme-status').innerText = `● Mode: ${isLight ? 'Light' : 'Dark'} | UTF-8`;
-    }
-
-    function runPreview() {
-        const html = document.getElementById("html-code").value;
-        const css = "<style>" + document.getElementById("css-code").value + "</style>";
-        const js = "<script>" + document.getElementById("js-code").value + "<\/script>";
-        const outputFrame = document.getElementById("output").contentWindow.document;
-        outputFrame.open(); 
-        outputFrame.write(html + css + js); 
-        outputFrame.close();
-    }
-
-    function saveFile(type) {
-        const content = document.getElementById(type + "-code").value;
-        const blob = new Blob([content], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; 
-        a.download = `index.${type === 'html' ? 'html' : (type === 'css' ? 'css' : 'js')}`; 
-        a.click();
-    }
-
-    function clearAll() { 
-        if(confirm("Are you sure you want to clear all code?")) { 
-            document.querySelectorAll('textarea').forEach(t => t.value = ''); 
-            runPreview(); 
-        } 
-    }
-
+    function clearAll() { if(confirm("Clear all code?")) { location.reload(); } }
     function showModal(id) { document.getElementById(id).style.display = 'flex'; }
     function hideModal(id) { document.getElementById(id).style.display = 'none'; }
-</script>
 
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
+        if (e.ctrlKey && e.key === 's') { e.preventDefault(); const active = document.querySelector('.tab.active').id.replace('tab-', ''); saveFile(active); }
+        if (e.ctrlKey && e.key === 't') { e.preventDefault(); toggleTheme(); }
+    });
+</script>
 </body>
 </html>
