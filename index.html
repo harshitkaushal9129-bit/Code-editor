@@ -80,10 +80,14 @@
         footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; }
         .search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; }
 
-        /* Modals & Pro Developer UI */
+        /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
         .modal-content { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         
+        .shortcut-list { text-align: left; margin-top: 15px; }
+        .shortcut-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
+        .kbd { background: #333; padding: 2px 6px; border-radius: 4px; color: var(--accent); font-family: monospace; border-bottom: 2px solid #000; }
+
         .dev-card { background: #252526; border-radius: 10px; padding: 20px; margin-top: 15px; border: 1px solid #333; }
         .dev-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px; }
         .dev-name { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; }
@@ -109,7 +113,7 @@
 <div class="top-nav">
     <div class="menu-item" onclick="document.getElementById('file-input').click()">📁 Open File</div>
     <div class="menu-item" onclick="shareProject()">📤 Share Project</div>
-    <div class="menu-item" onclick="showShortcuts()">Shortcuts</div>
+    <div class="menu-item" onclick="showModal('shortcutModal')">⌨️ Shortcuts</div>
     <div class="menu-item" onclick="clearAll()">Clear All</div>
     <div class="menu-item" onclick="showModal('helpModal')">Help</div>
     <div class="menu-item" onclick="showModal('devModal')" style="color: var(--accent);">👑 Developer Pro</div>
@@ -197,6 +201,22 @@
     </div>
 </div>
 
+<div id="shortcutModal" class="modal">
+    <div class="modal-content">
+        <h3>Keyboard Shortcuts</h3>
+        <div class="shortcut-list">
+            <div class="shortcut-item"><span>Run Code</span> <span class="kbd">Ctrl + Enter</span></div>
+            <div class="shortcut-item"><span>Save File</span> <span class="kbd">Ctrl + S</span></div>
+            <div class="shortcut-item"><span>HTML Tab</span> <span class="kbd">Alt + 1</span></div>
+            <div class="shortcut-item"><span>CSS Tab</span> <span class="kbd">Alt + 2</span></div>
+            <div class="shortcut-item"><span>JS Tab</span> <span class="kbd">Alt + 3</span></div>
+            <div class="shortcut-item"><span>Toggle Theme</span> <span class="kbd">Ctrl + T</span></div>
+            <div class="shortcut-item"><span>Clear All</span> <span class="kbd">Ctrl + Shift + X</span></div>
+        </div>
+        <button class="close-btn" onclick="hideModal('shortcutModal')">Got it!</button>
+    </div>
+</div>
+
 <div id="devModal" class="modal">
     <div class="modal-content">
         <div class="dev-card">
@@ -240,8 +260,7 @@
             navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW Error: ", err));
         });
     }
-        </script>
-    <script>
+
     // --- PWA Install ---
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -260,11 +279,39 @@
         }
     });
 
+    // --- Keyboard Shortcuts System ---
+    window.addEventListener('keydown', function(e) {
+        // Run Code: Ctrl + Enter
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            runPreview();
+        }
+        // Save: Ctrl + S
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            const currentTab = document.querySelector('.tab.active').id.split('-')[1];
+            saveFile(currentTab);
+        }
+        // Tabs: Alt + 1, 2, 3
+        if (e.altKey && e.key === '1') { e.preventDefault(); switchTab('html'); }
+        if (e.altKey && e.key === '2') { e.preventDefault(); switchTab('css'); }
+        if (e.altKey && e.key === '3') { e.preventDefault(); switchTab('js'); }
+        
+        // Theme: Ctrl + T
+        if (e.ctrlKey && e.key === 't') {
+            e.preventDefault();
+            toggleTheme();
+        }
+        // Clear: Ctrl + Shift + X
+        if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) {
+            e.preventDefault();
+            clearAll();
+        }
+    });
+
     // --- Share Functionality ---
     async function shareProject() {
-        const html = document.getElementById('html-code').value;
         const textToShare = `Check out my code on DevStudio Pro!\n\nBuild by Kaushal.`;
-        
         if (navigator.share) {
             try {
                 await navigator.share({
@@ -276,12 +323,7 @@
                 console.log("Share failed:", err);
             }
         } else {
-            const tempInput = document.createElement("input");
-            document.body.appendChild(tempInput);
-            tempInput.value = window.location.href;
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
+            navigator.clipboard.writeText(window.location.href);
             alert("Share Link copied to clipboard!");
         }
     }
@@ -312,7 +354,7 @@
     function searchInEditor(val) {
         const activePanel = document.querySelector('.panel.active textarea');
         if(!val || !activePanel) return;
-        const index = activePanel.value.indexOf(val);
+        const index = activePanel.value.toLowerCase().indexOf(val.toLowerCase());
         if(index !== -1) {
             activePanel.focus();
             activePanel.setSelectionRange(index, index + val.length);
@@ -363,7 +405,6 @@
 
     function showModal(id) { document.getElementById(id).style.display = 'flex'; }
     function hideModal(id) { document.getElementById(id).style.display = 'none'; }
-    function showShortcuts() { alert("Shortcuts:\n- Live preview auto-updates\n- Share: Social sharing enabled\n- Tabs: Switch between files"); }
 </script>
 
 </body>
