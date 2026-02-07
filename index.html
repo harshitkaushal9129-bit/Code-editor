@@ -18,6 +18,7 @@
             --text-color: #9cdcfe;
             --editor-bg: #1e1e1e;
             --accent: #f7df1e;
+            --share-color: #6a1b9a;
         }
         
         body.light-mode {
@@ -74,6 +75,7 @@
 
         .btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
         .run-btn { background: #4caf50; color: white; }
+        .share-btn { background: var(--share-color); color: white; }
 
         footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; }
         .search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; }
@@ -106,6 +108,7 @@
 
 <div class="top-nav">
     <div class="menu-item" onclick="document.getElementById('file-input').click()">📁 Open File</div>
+    <div class="menu-item" onclick="shareProject()">📤 Share Project</div>
     <div class="menu-item" onclick="showShortcuts()">Shortcuts</div>
     <div class="menu-item" onclick="clearAll()">Clear All</div>
     <div class="menu-item" onclick="showModal('helpModal')">Help</div>
@@ -120,6 +123,7 @@
     <div style="display: flex; gap: 10px; align-items: center;">
         <input type="text" class="search-box" placeholder="Search code..." oninput="searchInEditor(this.value)">
         <button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install</button>
+        <button class="btn share-btn" onclick="shareProject()">📤 Share</button>
         <button class="btn run-btn" onclick="runPreview()">▶ Run</button>
     </div>
 </header>
@@ -143,8 +147,8 @@
 <div class="main-layout">
     <div class="sidebar">
         <div class="sidebar-icon" onclick="document.getElementById('file-input').click()">📂</div>
+        <div class="sidebar-icon" onclick="shareProject()">📤</div>
         <div class="sidebar-icon">🔍</div>
-        <div class="sidebar-icon">🌿</div>
         <div class="sidebar-icon">🧩</div>
         <div style="flex: 1;"></div>
         <div class="sidebar-icon" onclick="showModal('devModal')">⚙️</div>
@@ -188,7 +192,7 @@
 <div id="helpModal" class="modal">
     <div class="modal-content">
         <h3>User Guide</h3>
-        <p style="margin-top:10px; color:#ccc;">File manager से HTML, CSS या JS फाइल ओपन करें और लाइव कोडिंग का आनंद लें।</p>
+        <p style="margin-top:10px; color:#ccc;">File manager से HTML, CSS या JS फाइल ओपन करें और लाइव कोडिंग का आनंद लें। शेयर बटन से अपना काम दोस्तों को भेजें।</p>
         <button class="close-btn" onclick="hideModal('helpModal')">Close</button>
     </div>
 </div>
@@ -202,9 +206,9 @@
             
             <div class="feature-grid">
                 <div class="feature-item">✓ PWA Enabled</div>
-                <div class="feature-item">✓ Offline Support</div>
+                <div class="feature-item">✓ Share API</div>
                 <div class="feature-item">✓ Live Preview</div>
-                <div class="feature-item">✓ File System API</div>
+                <div class="feature-item">✓ File Management</div>
             </div>
 
             <div style="font-size: 11px; color: var(--accent); margin-bottom: 10px;">Build Version: 1.0.8 (Stable)</div>
@@ -236,7 +240,7 @@
             navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW Error: ", err));
         });
     }
-</script>
+        </script>
     <script>
     // --- PWA Install ---
     let deferredPrompt;
@@ -255,6 +259,32 @@
             });
         }
     });
+
+    // --- Share Functionality ---
+    async function shareProject() {
+        const html = document.getElementById('html-code').value;
+        const textToShare = `Check out my code on DevStudio Pro!\n\nBuild by Kaushal.`;
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'DevStudio Pro Code',
+                    text: textToShare,
+                    url: window.location.href
+                });
+            } catch (err) {
+                console.log("Share failed:", err);
+            }
+        } else {
+            const tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.value = window.location.href;
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Share Link copied to clipboard!");
+        }
+    }
 
     // --- Editor Functions ---
     function openLocalFile(event) {
@@ -333,7 +363,7 @@
 
     function showModal(id) { document.getElementById(id).style.display = 'flex'; }
     function hideModal(id) { document.getElementById(id).style.display = 'none'; }
-    function showShortcuts() { alert("Shortcuts:\n- Ctrl+S: Save (Browser Default)\n- Run: Live preview auto-updates\n- Tabs: Switch between files"); }
+    function showShortcuts() { alert("Shortcuts:\n- Live preview auto-updates\n- Share: Social sharing enabled\n- Tabs: Switch between files"); }
 </script>
 
 </body>
