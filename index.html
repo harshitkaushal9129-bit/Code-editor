@@ -17,6 +17,7 @@
             --border: #333; 
             --text-color: #9cdcfe;
             --editor-bg: #1e1e1e;
+            --accent: #f7df1e;
         }
         
         body.light-mode {
@@ -28,8 +29,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
 
+        /* Nav & Headers */
         .top-nav { background: var(--panel); padding: 5px 15px; display: flex; gap: 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
         .menu-item { cursor: pointer; color: #888; transition: 0.2s; }
         .menu-item:hover { color: var(--primary); }
@@ -44,6 +46,7 @@
         
         #file-input { display: none; }
 
+        /* Workspace Layout */
         .main-layout { display: flex; flex: 1; overflow: hidden; }
         .sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 25px; }
         .sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; }
@@ -75,9 +78,28 @@
         footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; }
         .search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: #252526; padding: 20px; border-radius: 8px; width: 80%; max-width: 400px; text-align: center; }
-        .close-btn { margin-top: 15px; padding: 8px 20px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; }
+        /* Modals & Pro Developer UI */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        
+        .dev-card { background: #252526; border-radius: 10px; padding: 20px; margin-top: 15px; border: 1px solid #333; }
+        .dev-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px; }
+        .dev-name { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; }
+        .dev-info { color: #aaa; font-size: 13px; margin-bottom: 15px; }
+        
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; text-align: left; }
+        .feature-item { font-size: 11px; background: #2d2d2d; padding: 5px 8px; border-radius: 4px; color: #ddd; border-left: 2px solid var(--primary); }
+        
+        .support-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .support-link { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; border-radius: 6px; font-weight: bold; transition: 0.2s; font-size: 14px; }
+        .whatsapp-btn { background: #25d366; color: white; }
+        .call-btn { background: #007acc; color: white; }
+        .qr-section { margin-top: 15px; padding: 10px; background: white; border-radius: 8px; display: inline-block; }
+        .qr-text { color: #333; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+        .qr-img { width: 120px; height: 120px; }
+
+        .close-btn { margin-top: 20px; width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .close-btn:hover { background: #444; }
     </style>
 </head>
 <body>
@@ -87,7 +109,7 @@
     <div class="menu-item" onclick="showShortcuts()">Shortcuts</div>
     <div class="menu-item" onclick="clearAll()">Clear All</div>
     <div class="menu-item" onclick="showModal('helpModal')">Help</div>
-    <div class="menu-item" onclick="showModal('devModal')" style="color: #f7df1e;">Developer</div>
+    <div class="menu-item" onclick="showModal('devModal')" style="color: var(--accent);">👑 Developer Pro</div>
 </div>
 
 <header>
@@ -125,7 +147,7 @@
         <div class="sidebar-icon">🌿</div>
         <div class="sidebar-icon">🧩</div>
         <div style="flex: 1;"></div>
-        <div class="sidebar-icon">⚙️</div>
+        <div class="sidebar-icon" onclick="showModal('devModal')">⚙️</div>
     </div>
 
     <div class="workspace">
@@ -163,19 +185,60 @@
     <div>Designed by Kaushal • v1.0.8</div>
 </footer>
 
-<div id="helpModal" class="modal"><div class="modal-content"><h3>User Guide</h3><p>File manager से HTML, CSS या JS फाइल ओपन करें।</p><button class="close-btn" onclick="hideModal('helpModal')">Close</button></div></div>
-<div id="devModal" class="modal"><div class="modal-content"><h3>Kaushal</h3><p>Build v1.0.8 (SW Enabled)</p><button class="close-btn" onclick="hideModal('devModal')">Close</button></div></div>
+<div id="helpModal" class="modal">
+    <div class="modal-content">
+        <h3>User Guide</h3>
+        <p style="margin-top:10px; color:#ccc;">File manager से HTML, CSS या JS फाइल ओपन करें और लाइव कोडिंग का आनंद लें।</p>
+        <button class="close-btn" onclick="hideModal('helpModal')">Close</button>
+    </div>
+</div>
+
+<div id="devModal" class="modal">
+    <div class="modal-content">
+        <div class="dev-card">
+            <img src="Kaushalji.png" class="dev-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="dev-name">Kaushal</div>
+            <div class="dev-info">Full Stack Web Developer & Designer</div>
+            
+            <div class="feature-grid">
+                <div class="feature-item">✓ PWA Enabled</div>
+                <div class="feature-item">✓ Offline Support</div>
+                <div class="feature-item">✓ Live Preview</div>
+                <div class="feature-item">✓ File System API</div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--accent); margin-bottom: 10px;">Build Version: 1.0.8 (Stable)</div>
+        </div>
+
+        <div class="support-btns">
+            <a href="https://wa.me/9129191898" target="_blank" class="support-link whatsapp-btn">
+                <span>💬 WhatsApp Support</span>
+            </a>
+            <a href="tel:9129191898" class="support-link call-btn">
+                <span>📞 Call Developer</span>
+            </a>
+        </div>
+
+        <div class="qr-section">
+            <div class="qr-text">Scan to Support (UPI)</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mandavikaushal913@okaxis&pn=Kaushal" class="qr-img" alt="UPI QR">
+            <div style="font-size: 10px; color: #555; margin-top: 5px;">mandavikaushal913@okaxis</div>
+        </div>
+
+        <button class="close-btn" onclick="hideModal('devModal')">Return to Editor</button>
+    </div>
+</div>
 
 <script>
-    // --- Service Worker Registration ---
+    // --- Service Worker ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW Error: ", err));
         });
     }
-        </script>
+</script>
     <script>
-    // --- PWA Install Logic ---
+    // --- PWA Install ---
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -193,7 +256,7 @@
         }
     });
 
-    // --- Editor Logic ---
+    // --- Editor Functions ---
     function openLocalFile(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -229,7 +292,10 @@
     function updateStyle() {
         const sz = document.getElementById('font-size').value;
         const fm = document.getElementById('font-family').value;
-        document.querySelectorAll('textarea').forEach(t => { t.style.fontSize = sz; t.style.fontFamily = fm; });
+        document.querySelectorAll('textarea').forEach(t => { 
+            t.style.fontSize = sz; 
+            t.style.fontFamily = fm; 
+        });
     }
 
     function toggleTheme() {
@@ -253,13 +319,21 @@
         const blob = new Blob([content], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = url; a.download = `file.${type}`; a.click();
+        a.href = url; 
+        a.download = `index.${type === 'html' ? 'html' : (type === 'css' ? 'css' : 'js')}`; 
+        a.click();
     }
 
-    function clearAll() { if(confirm("Clear?")) { document.querySelectorAll('textarea').forEach(t => t.value = ''); runPreview(); } }
+    function clearAll() { 
+        if(confirm("Are you sure you want to clear all code?")) { 
+            document.querySelectorAll('textarea').forEach(t => t.value = ''); 
+            runPreview(); 
+        } 
+    }
+
     function showModal(id) { document.getElementById(id).style.display = 'flex'; }
     function hideModal(id) { document.getElementById(id).style.display = 'none'; }
-    function showShortcuts() { alert("Tabs: Switch files\nRun: Live preview"); }
+    function showShortcuts() { alert("Shortcuts:\n- Ctrl+S: Save (Browser Default)\n- Run: Live preview auto-updates\n- Tabs: Switch between files"); }
 </script>
 
 </body>
