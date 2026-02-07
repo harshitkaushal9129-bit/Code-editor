@@ -47,6 +47,11 @@
         
         #file-input { display: none; }
 
+        /* Quick Tags Bar */
+        .quick-tags { background: #2d2d2d; padding: 5px 10px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+        .tag-pill { background: #444; color: #ddd; padding: 3px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; transition: 0.2s; }
+        .tag-pill:hover { background: var(--primary); border-color: white; }
+
         /* Workspace Layout */
         .main-layout { display: flex; flex: 1; overflow: hidden; }
         .sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 25px; }
@@ -146,6 +151,18 @@
         <option value="'Courier New'">Courier New</option>
     </select>
     <button class="tool-btn" onclick="toggleTheme()">🌓 Change Theme</button>
+</div>
+
+<div class="quick-tags" id="tags-bar">
+    <div class="tag-pill" onclick="insertTag('<div>', '</div>')">DIV</div>
+    <div class="tag-pill" onclick="insertTag('<span>', '</span>')">SPAN</div>
+    <div class="tag-pill" onclick="insertTag('<button>', '</button>')">BUTTON</div>
+    <div class="tag-pill" onclick="insertTag('<input type=\'text\'>', '')">INPUT</div>
+    <div class="tag-pill" onclick="insertTag('<h1>', '</h1>')">H1</div>
+    <div class="tag-pill" onclick="insertTag('<p>', '</p>')">P</div>
+    <div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">LINK</div>
+    <div class="tag-pill" onclick="insertTag('<img>', '')">IMG</div>
+    <div class="tag-pill" onclick="insertTag('<ul>\n  <li>', '</li>\n</ul>')">LIST</div>
 </div>
 
 <div class="main-layout">
@@ -261,6 +278,9 @@
         });
     }
 
+        </script>
+    <script>
+
     // --- PWA Install ---
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -279,35 +299,36 @@
         }
     });
 
-    // --- Keyboard Shortcuts System ---
+    // --- Keyboard Shortcuts ---
     window.addEventListener('keydown', function(e) {
-        // Run Code: Ctrl + Enter
-        if (e.ctrlKey && e.key === 'Enter') {
-            e.preventDefault();
-            runPreview();
-        }
-        // Save: Ctrl + S
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
+        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
+        if (e.ctrlKey && e.key === 's') { 
+            e.preventDefault(); 
             const currentTab = document.querySelector('.tab.active').id.split('-')[1];
-            saveFile(currentTab);
+            saveFile(currentTab); 
         }
-        // Tabs: Alt + 1, 2, 3
         if (e.altKey && e.key === '1') { e.preventDefault(); switchTab('html'); }
         if (e.altKey && e.key === '2') { e.preventDefault(); switchTab('css'); }
         if (e.altKey && e.key === '3') { e.preventDefault(); switchTab('js'); }
-        
-        // Theme: Ctrl + T
-        if (e.ctrlKey && e.key === 't') {
-            e.preventDefault();
-            toggleTheme();
-        }
-        // Clear: Ctrl + Shift + X
-        if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) {
-            e.preventDefault();
-            clearAll();
-        }
+        if (e.ctrlKey && e.key === 't') { e.preventDefault(); toggleTheme(); }
+        if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) { e.preventDefault(); clearAll(); }
     });
+
+    // --- Quick Tag Inserter ---
+    function insertTag(open, close) {
+        const textarea = document.getElementById('html-code');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        const before = text.substring(0, start);
+        const selected = text.substring(start, end);
+        const after = text.substring(end);
+
+        textarea.value = before + open + selected + close + after;
+        textarea.focus();
+        textarea.setSelectionRange(start + open.length, start + open.length + selected.length);
+        runPreview();
+    }
 
     // --- Share Functionality ---
     async function shareProject() {
@@ -319,9 +340,7 @@
                     text: textToShare,
                     url: window.location.href
                 });
-            } catch (err) {
-                console.log("Share failed:", err);
-            }
+            } catch (err) { console.log("Share failed:", err); }
         } else {
             navigator.clipboard.writeText(window.location.href);
             alert("Share Link copied to clipboard!");
@@ -349,6 +368,9 @@
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.getElementById('tab-' + type).classList.add('active');
         document.getElementById('panel-' + type).classList.add('active');
+        
+        // Hide tags bar if not on HTML tab
+        document.getElementById('tags-bar').style.display = (type === 'html') ? 'flex' : 'none';
     }
 
     function searchInEditor(val) {
