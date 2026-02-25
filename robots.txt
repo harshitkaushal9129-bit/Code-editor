@@ -1,0 +1,6 @@
+# Sabhi search engines ko allow karein
+User-agent: *
+Allow: /
+
+# Sitemap ka location batayein
+Sitemap: https://harshitkaushal9129-bit.github.io/Code-editor/sitemap.xml
