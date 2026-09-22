@@ -1,446 +1,354 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevStudio Pro - Web Editor</title>
-    
-    <meta name="theme-color" content="#007acc">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="Kaushalji.png">
-
-    <style>
-        :root { 
-            --primary: #007acc; 
-            --bg: #0f0f0f; 
-            --panel: #1a1a1a; 
-            --border: #333; 
-            --text-color: #9cdcfe;
-            --editor-bg: #1e1e1e;
-            --accent: #f7df1e;
-            --share-color: #6a1b9a;
-        }
-        
-        body.light-mode {
-            --bg: #ffffff;
-            --panel: #f3f3f3;
-            --border: #ccc;
-            --text-color: #000000;
-            --editor-bg: #ffffff;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
-
-        /* Nav & Headers */
-        .top-nav { background: var(--panel); padding: 5px 15px; display: flex; gap: 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
-        .menu-item { cursor: pointer; color: #888; transition: 0.2s; }
-        .menu-item:hover { color: var(--primary); }
-
-        header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); }
-        .logo-section { display: flex; align-items: center; gap: 10px; }
-        .logo-img { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
-        .logo-text { font-size: 18px; font-weight: bold; color: var(--primary); }
-
-        .tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-        .tool-select, .tool-btn { background: #333; color: white; border: 1px solid #444; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
-        
-        #file-input { display: none; }
-
-        /* Quick Tags Bar */
-        .quick-tags { background: #2d2d2d; padding: 5px 10px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--border); }
-        .tag-pill { background: #444; color: #ddd; padding: 3px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; transition: 0.2s; }
-        .tag-pill:hover { background: var(--primary); border-color: white; }
-
-        /* Workspace Layout */
-        .main-layout { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 25px; }
-        .sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; }
-        .sidebar-icon:hover { color: white; transform: scale(1.1); }
-
-        .editor-tabs { display: flex; background: #2d2d2d; border-bottom: 1px solid var(--border); overflow-x: auto; }
-        .tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #999; border-right: 1px solid var(--border); white-space: nowrap; display: flex; align-items: center; }
-        .tab.active { background: var(--editor-bg); color: white; border-top: 2px solid var(--primary); }
-        .tab .close-icon { margin-left: 10px; color: #ff5f56; font-weight: bold; cursor: pointer; }
-
-        .workspace { display: flex; flex: 1; overflow: hidden; }
-        @media (max-width: 768px) { .workspace { flex-direction: column; } }
-
-        .editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid var(--border); background: var(--editor-bg); }
-        @media (max-width: 768px) { .editor-panels { width: 100%; height: 50%; } }
-
-        .panel { display: none; flex-direction: column; height: 100%; }
-        .panel.active { display: flex; }
-
-        .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: rgba(0,0,0,0.05); }
-        textarea { width: 100%; flex: 1; background: var(--editor-bg); color: var(--text-color); border: none; padding: 15px; font-family: 'Consolas', monospace; outline: none; font-size: 14px; line-height: 1.6; resize: none; }
-
-        .preview-area { width: 40%; background: white; position: relative; }
-        @media (max-width: 768px) { .preview-area { width: 100%; height: 50%; } }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        .btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        .run-btn { background: #4caf50; color: white; }
-        .share-btn { background: var(--share-color); color: white; }
-
-        footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; }
-        .search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; }
-
-        /* Modals (Exactly from your original) */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
-        .modal-content { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-        .shortcut-list { text-align: left; margin-top: 15px; }
-        .shortcut-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
-        .kbd { background: #333; padding: 2px 6px; border-radius: 4px; color: var(--accent); font-family: monospace; border-bottom: 2px solid #000; }
-        .dev-card { background: #252526; border-radius: 10px; padding: 20px; margin-top: 15px; border: 1px solid #333; }
-        .dev-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px; }
-        .dev-name { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; }
-        .dev-info { color: #aaa; font-size: 13px; margin-bottom: 15px; }
-        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; text-align: left; }
-        .feature-item { font-size: 11px; background: #2d2d2d; padding: 5px 8px; border-radius: 4px; color: #ddd; border-left: 2px solid var(--primary); }
-        .support-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .support-link { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; border-radius: 6px; font-weight: bold; transition: 0.2s; font-size: 14px; }
-        .whatsapp-btn { background: #25d366; color: white; }
-        .call-btn { background: #007acc; color: white; }
-        .qr-section { margin-top: 15px; padding: 10px; background: white; border-radius: 8px; display: inline-block; }
-        .qr-text { color: #333; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
-        .qr-img { width: 120px; height: 120px; }
-        .close-btn { margin-top: 20px; width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevStudio Pro - Advanced Web Editor</title>
+<meta name="theme-color" content="#007acc">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="Kaushalji.png">
+<style>
+:root { --primary: #007acc; --bg: #0f0f0f; --panel: #1a1a1a; --border: #333; --text-color: #9cdcfe; --editor-bg: #1e1e1e; --accent: #f7df1e; --share-color: #6a1b9a; }
+body.light-mode { --bg: #ffffff; --panel: #f3f3f3; --border: #ccc; --text-color: #000000; --editor-bg: #ffffff; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
+.top-nav { background: var(--panel); padding: 5px 15px; display: flex; gap: 20px; border-bottom: 1px solid var(--border); font-size: 13px; align-items: center; overflow-x: auto; }
+.menu-item { cursor: pointer; color: #888; transition: 0.2s; white-space: nowrap; }
+.menu-item:hover { color: var(--primary); }
+header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); }
+.logo-section { display: flex; align-items: center; gap: 10px; }
+.logo-img { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
+.logo-text { font-size: 18px; font-weight: bold; color: var(--primary); }
+.tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.tool-select, .tool-btn { background: #333; color: white; border: 1px solid #444; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+#file-input, #folder-input { display: none; }
+.quick-tags { background: #2d2d2d; padding: 6px 10px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--border); align-items: center; }
+.tag-pill { background: #444; color: #ddd; padding: 3px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; transition: 0.2s; }
+.tag-pill:hover { background: var(--primary); border-color: white; }
+.dropdown-tools { position: relative; display: inline-block; }
+.dropdown-content { display: none; position: absolute; background-color: #252526; min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5); z-index: 10; border: 1px solid var(--border); border-radius: 4px; }
+.dropdown-content div { color: white; padding: 8px 12px; font-size: 11px; cursor: pointer; }
+.dropdown-content div:hover { background-color: var(--primary); }
+.dropdown-tools:hover .dropdown-content { display: block; }
+.main-layout { display: flex; flex: 1; overflow: hidden; }
+.sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 25px; }
+.sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; }
+.sidebar-icon:hover { color: white; transform: scale(1.1); }
+.editor-tabs { display: flex; background: #2d2d2d; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #999; border-right: 1px solid var(--border); white-space: nowrap; display: flex; align-items: center; }
+.tab.active { background: var(--editor-bg); color: white; border-top: 2px solid var(--primary); }
+.tab .close-icon { margin-left: 10px; color: #ff5f56; font-weight: bold; cursor: pointer; }
+.workspace { display: flex; flex: 1; overflow: hidden; }
+@media (max-width: 768px) { .workspace { flex-direction: column; } }
+.editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid var(--border); background: var(--editor-bg); }
+@media (max-width: 768px) { .editor-panels { width: 100%; height: 50%; } }
+.panel { display: none; flex-direction: column; height: 100%; }
+.panel.active { display: flex; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: rgba(0,0,0,0.05); }
+textarea { width: 100%; flex: 1; background: var(--editor-bg); color: var(--text-color); border: none; padding: 15px; font-family: 'Consolas', monospace; outline: none; font-size: 14px; line-height: 1.6; resize: none; tab-size: 4; }
+.preview-area { width: 40%; background: white; position: relative; }
+@media (max-width: 768px) { .preview-area { width: 100%; height: 50%; } }
+iframe { width: 100%; height: 100%; border: none; }
+.btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+.run-btn { background: #4caf50; color: white; }
+.share-btn { background: var(--share-color); color: white; }
+footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; }
+.search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
+.modal-content { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+.shortcut-list { text-align: left; margin-top: 15px; max-height: 250px; overflow-y: auto; }
+.shortcut-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
+.kbd { background: #333; padding: 2px 6px; border-radius: 4px; color: var(--accent); font-family: monospace; border-bottom: 2px solid #000; }
+.dev-card { background: #252526; border-radius: 10px; padding: 20px; margin-top: 15px; border: 1px solid #333; }
+.dev-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px; }
+.dev-name { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; }
+.dev-info { color: #aaa; font-size: 13px; margin-bottom: 15px; }
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; text-align: left; }
+.feature-item { font-size: 11px; background: #2d2d2d; padding: 5px 8px; border-radius: 4px; color: #ddd; border-left: 2px solid var(--primary); }
+.support-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.support-link { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; border-radius: 6px; font-weight: bold; transition: 0.2s; font-size: 14px; }
+.whatsapp-btn { background: #25d366; color: white; }
+.call-btn { background: #007acc; color: white; }
+.close-btn { margin-top: 20px; width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer; }
+</style>
 </head>
 <body>
-
 <div class="top-nav">
-    <div class="menu-item" onclick="document.getElementById('file-input').click()">📁 Open File</div>
-    <div class="menu-item" onclick="shareProject()">📤 Share Project</div>
-    <div class="menu-item" onclick="showModal('shortcutModal')">⌨️ Shortcuts</div>
-    <div class="menu-item" onclick="clearAll()">Clear All</div>
-    <div class="menu-item" onclick="showModal('helpModal')">Help</div>
-    <div class="menu-item" onclick="showModal('devModal')" style="color: var(--accent);">👑 Developer Pro</div>
+<div class="menu-item" onclick="document.getElementById('file-input').click()">📁 Open File</div>
+<div class="menu-item" onclick="document.getElementById('folder-input').click()">📂 Import Folder</div>
+<div class="menu-item" onclick="shareProject()">📤 Share Project</div>
+<div class="menu-item" onclick="showModal('shortcutModal')">⌨️ Shortcuts</div>
+<div class="menu-item" onclick="clearAll()">Clear All</div>
+<div class="menu-item" onclick="showModal('helpModal')">Help</div>
+<div class="menu-item" onclick="showModal('devModal')" style="color: var(--accent);">👑 Developer Pro</div>
 </div>
-
 <header>
-    <div class="logo-section">
-        <img src="Kaushalji.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1005/1005141.png'">
-        <div class="logo-text">DevStudio Pro</div>
-    </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <input type="text" class="search-box" placeholder="Search code..." oninput="searchInEditor(this.value)">
-        <button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install</button>
-        <button class="btn share-btn" onclick="shareProject()">📤 Share</button>
-        <button class="btn run-btn" onclick="runPreview()">▶ Run</button>
-    </div>
+<div class="logo-section">
+<img src="Kaushalji.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1005/1005141.png'">
+<div class="logo-text">DevStudio Pro</div>
+</div>
+<div style="display: flex; gap: 10px; align-items: center;">
+<input type="text" class="search-box" placeholder="Search code..." oninput="searchInEditor(this.value)">
+<button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install</button>
+<button class="btn share-btn" onclick="shareProject()">📤 Share</button>
+<button class="btn run-btn" onclick="runPreview()">▶ Run</button>
+</div>
 </header>
-
 <div class="tools-bar">
-    <input type="file" id="file-input" onchange="openLocalFile(event)">
-    <select class="tool-select" id="font-size" onchange="updateStyle()">
-        <option value="14px">14px</option>
-        <option value="16px">16px</option>
-        <option value="18px">18px</option>
-        <option value="20px">20px</option>
-    </select>
-    <select class="tool-select" id="font-family" onchange="updateStyle()">
-        <option value="'Consolas', monospace">Consolas</option>
-        <option value="system-ui">System UI</option>
-        <option value="'Courier New'">Courier New</option>
-    </select>
-    <button class="tool-btn" onclick="toggleTheme()">🌓 Change Theme</button>
+<input type="file" id="file-input" onchange="openLocalFile(event)" multiple>
+<input type="file" id="folder-input" webkitdirectory directory multiple onchange="openFolder(event)">
+<select class="tool-select" id="font-size" onchange="updateStyle()">
+<option value="14px">14px</option>
+<option value="16px">16px</option>
+<option value="18px">18px</option>
+<option value="20px">20px</option>
+</select>
+<select class="tool-select" id="font-family" onchange="updateStyle()">
+<option value="'Consolas', monospace">Consolas</option>
+<option value="system-ui">System UI</option>
+<option value="'Courier New'">Courier New</option>
+</select>
+<button class="tool-btn" onclick="toggleTheme()">🌓 Change Theme</button>
 </div>
-
 <div class="quick-tags" id="tags-bar">
-    <div class="tag-pill" onclick="insertTag('<div>', '</div>')">DIV</div>
-    <div class="tag-pill" onclick="insertTag('<span>', '</span>')">SPAN</div>
-    <div class="tag-pill" onclick="insertTag('<button>', '</button>')">BUTTON</div>
-    <div class="tag-pill" onclick="insertTag('<input type=\'text\'>', '')">INPUT</div>
-    <div class="tag-pill" onclick="insertTag('<h1>', '</h1>')">H1</div>
-    <div class="tag-pill" onclick="insertTag('<p>', '</p>')">P</div>
-    <div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">LINK</div>
-    <div class="tag-pill" onclick="insertTag('<img>', '')">IMG</div>
-    <div class="tag-pill" onclick="insertTag('<ul>\n  <li>', '</li>\n</ul>')">LIST</div>
+<div class="tag-pill" onclick="insertTag('<div>', '</div>')">DIV</div>
+<div class="tag-pill" onclick="insertTag('<span>', '</span>')">SPAN</div>
+<div class="tag-pill" onclick="insertTag('<button>', '</button>')">BUTTON</div>
+<div class="tag-pill" onclick="insertTag('<input type=\'text\'>', '')">INPUT</div>
+<div class="tag-pill" onclick="insertTag('<h1>', '</h1>')">H1</div>
+<div class="tag-pill" onclick="insertTag('<p>', '</p>')">P</div>
+<div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">LINK</div>
+<div class="dropdown-tools">
+<div class="tag-pill" style="background:var(--primary); color:white;">⚡ Templates ▼</div>
+<div class="dropdown-content">
+<div onclick="insertSnippet('html5')">HTML5 Boilerplate</div>
+<div onclick="insertSnippet('flexbox')">CSS Flexbox Centering</div>
+<div onclick="insertSnippet('grid')">CSS Grid Layout</div>
+<div onclick="insertSnippet('fetch')">JS Fetch API Request</div>
+<div onclick="insertSnippet('dom')">JS Query Selector</div>
 </div>
-
+</div>
+</div>
 <div class="main-layout">
-    <div class="sidebar">
-        <div class="sidebar-icon" onclick="document.getElementById('file-input').click()">📂</div>
-        <div class="sidebar-icon" onclick="shareProject()">📤</div>
-        <div class="sidebar-icon">🔍</div>
-        <div class="sidebar-icon">🧩</div>
-        <div style="flex: 1;"></div>
-        <div class="sidebar-icon" onclick="showModal('devModal')">⚙️</div>
-    </div>
-
-    <div class="workspace">
-        <div class="editor-panels">
-            <div class="editor-tabs" id="tabs-container">
-                <div class="tab active" id="tab-html" onclick="switchTab('html')">index.html</div>
-                <div class="tab" id="tab-css" onclick="switchTab('css')">style.css</div>
-                <div class="tab" id="tab-js" onclick="switchTab('js')">script.js</div>
-            </div>
-
-            <div id="panels-container" style="flex:1; display:flex; flex-direction:column;">
-                <div id="panel-html" class="panel active">
-                    <div class="panel-header"><label>HTML</label><button class="btn" style="background:#e34f26;color:white" onclick="saveFile('html')">Save</button></div>
-                    <textarea id="html-code" oninput="runPreview()" placeholder="<html>...</html>"></textarea>
-                </div>
-                <div id="panel-css" class="panel">
-                    <div class="panel-header"><label>CSS</label><button class="btn" style="background:#007acc;color:white" onclick="saveFile('css')">Save</button></div>
-                    <textarea id="css-code" oninput="runPreview()" placeholder="body { background: #000; }"></textarea>
-                </div>
-                <div id="panel-js" class="panel">
-                    <div class="panel-header"><label>JS</label><button class="btn" style="background:#f7df1e;color:black" onclick="saveFile('js')">Save</button></div>
-                    <textarea id="js-code" oninput="runPreview()" placeholder="console.log('Hello World');"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="preview-area">
-            <iframe id="output"></iframe>
-        </div>
-    </div>
+<div class="sidebar">
+<div class="sidebar-icon" onclick="document.getElementById('file-input').click()" title="Open File">📂</div>
+<div class="sidebar-icon" onclick="document.getElementById('folder-input').click()" title="Import Folder">📁</div>
+<div class="sidebar-icon" onclick="shareProject()" title="Share">📤</div>
+<div class="sidebar-icon" onclick="showModal('shortcutModal')" title="Shortcuts">⌨️</div>
+<div style="flex: 1;"></div>
+<div class="sidebar-icon" onclick="showModal('devModal')" title="Settings">⚙️</div>
 </div>
-
+<div class="workspace">
+<div class="editor-panels">
+<div class="editor-tabs" id="tabs-container">
+<div class="tab active" id="tab-html" onclick="switchTab('html')">index.html</div>
+<div class="tab" id="tab-css" onclick="switchTab('css')">style.css</div>
+<div class="tab" id="tab-js" onclick="switchTab('js')">script.js</div>
+</div>
+<div id="panels-container" style="flex:1; display:flex; flex-direction:column;">
+<div id="panel-html" class="panel active">
+<div class="panel-header"><label>HTML</label><button class="btn" style="background:#e34f26;color:white" onclick="saveFile('html')">Save</button></div>
+<textarea id="html-code" oninput="runPreview()" placeholder="<html>...</html>"></textarea>
+</div>
+<div id="panel-css" class="panel">
+<div class="panel-header"><label>CSS</label><button class="btn" style="background:#007acc;color:white" onclick="saveFile('css')">Save</button></div>
+<textarea id="css-code" oninput="runPreview()" placeholder="body { background: #000; }"></textarea>
+</div>
+<div id="panel-js" class="panel">
+<div class="panel-header"><label>JS</label><button class="btn" style="background:#f7df1e;color:black" onclick="saveFile('js')">Save</button></div>
+<textarea id="js-code" oninput="runPreview()" placeholder="console.log('Hello World');"></textarea>
+</div>
+</div>
+</div>
+<div class="preview-area">
+<iframe id="output"></iframe>
+</div>
+</div>
+</div>
 <footer>
-    <div id="theme-status">● Mode: Dark | UTF-8</div>
-    <div>Designed by Kaushal • v1.0.8</div>
+<div id="theme-status">● Mode: Dark | UTF-8</div>
+<div>Designed by Kaushal • v1.1.0</div>
 </footer>
-
 <div id="helpModal" class="modal">
-    <div class="modal-content">
-        <h3>User Guide</h3>
-        <p style="margin-top:10px; color:#ccc;">File manager se koi bhi file open karein. HTML, CSS ya JS ke liye live preview dikhega. Nayi files naye tab mein khulengi.</p>
-        <button class="close-btn" onclick="hideModal('helpModal')">Close</button>
-    </div>
+<div class="modal-content">
+<h3>User Guide</h3>
+<p style="margin-top:10px; color:#ccc;">Multiple files ya poora project folder import karke unhe alag-alag tabs mein edit kar sakte hain. Templates menu se predefined code insert karein.</p>
+<button class="close-btn" onclick="hideModal('helpModal')">Close</button>
 </div>
-
+</div>
 <div id="shortcutModal" class="modal">
-    <div class="modal-content">
-        <h3>Keyboard Shortcuts</h3>
-        <div class="shortcut-list">
-            <div class="shortcut-item"><span>Run Code</span> <span class="kbd">Ctrl + Enter</span></div>
-            <div class="shortcut-item"><span>Save File</span> <span class="kbd">Ctrl + S</span></div>
-            <div class="shortcut-item"><span>HTML Tab</span> <span class="kbd">Alt + 1</span></div>
-            <div class="shortcut-item"><span>CSS Tab</span> <span class="kbd">Alt + 2</span></div>
-            <div class="shortcut-item"><span>JS Tab</span> <span class="kbd">Alt + 3</span></div>
-            <div class="shortcut-item"><span>Toggle Theme</span> <span class="kbd">Ctrl + T</span></div>
-            <div class="shortcut-item"><span>Clear All</span> <span class="kbd">Ctrl + Shift + X</span></div>
-        </div>
-        <button class="close-btn" onclick="hideModal('shortcutModal')">Got it!</button>
-    </div>
+<div class="modal-content">
+<h3>Keyboard Shortcuts</h3>
+<div class="shortcut-list">
+<div class="shortcut-item"><span>Run Code</span> <span class="kbd">Ctrl + Enter</span></div>
+<div class="shortcut-item"><span>Save File</span> <span class="kbd">Ctrl + S</span></div>
+<div class="shortcut-item"><span>HTML Tab</span> <span class="kbd">Alt + 1</span></div>
+<div class="shortcut-item"><span>CSS Tab</span> <span class="kbd">Alt + 2</span></div>
+<div class="shortcut-item"><span>JS Tab</span> <span class="kbd">Alt + 3</span></div>
+<div class="shortcut-item"><span>Toggle Theme</span> <span class="kbd">Ctrl + T</span></div>
+<div class="shortcut-item"><span>Auto-Indent/Tab</span> <span class="kbd">Tab Key</span></div>
+<div class="shortcut-item"><span>Clear All</span> <span class="kbd">Ctrl + Shift + X</span></div>
 </div>
-
+<button class="close-btn" onclick="hideModal('shortcutModal')">Got it!</button>
+</div>
+</div>
 <div id="devModal" class="modal">
-    <div class="modal-content">
-        <div class="dev-card">
-            <img src="Kaushalji.png" class="dev-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-            <div class="dev-name">Kaushal</div>
-            <div class="dev-info">Full Stack Web Developer & Designer</div>
-            <div class="feature-grid">
-                <div class="feature-item">✓ PWA Enabled</div>
-                <div class="feature-item">✓ Share API</div>
-                <div class="feature-item">✓ Live Preview</div>
-                <div class="feature-item">✓ Dynamic Tabs</div>
-            </div>
-            <div style="font-size: 11px; color: var(--accent); margin-bottom: 10px;">Build Version: 1.0.8 (Stable)</div>
-        </div>
-        <div class="support-btns">
-            <a href="https://wa.me/9129191898" target="_blank" class="support-link whatsapp-btn"><span>💬 WhatsApp Support</span></a>
-            <a href="tel:9129191898" class="support-link call-btn"><span>📞 Call Developer</span></a>
-        </div>
-        <div class="qr-section">
-            <div class="qr-text">Scan to Support (UPI)</div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=mandavikaushal913@okaxis&pn=Kaushal" class="qr-img" alt="UPI QR">
-            <div style="font-size: 10px; color: #555; margin-top: 5px;">mandavikaushal913@okaxis</div>
-        </div>
-        <button class="close-btn" onclick="hideModal('devModal')">Return to Editor</button>
-    </div>
+<div class="modal-content">
+<div class="dev-card">
+<img src="Kaushalji.png" class="dev-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+<div class="dev-name">Kaushal</div>
+<div class="dev-info">Full Stack Web Developer & Designer</div>
+<div class="feature-grid">
+<div class="feature-item">✓ Folder Import</div>
+<div class="feature-item">✓ Quick Snippets</div>
+<div class="feature-item">✓ Live Preview</div>
+<div class="feature-item">✓ Multi-tab Editor</div>
 </div>
-
+<div style="font-size: 11px; color: var(--accent); margin-bottom: 10px;">Build Version: 1.1.0 (Pro)</div>
+</div>
+<div class="support-btns">
+<a href="https://wa.me/9129191898" target="_blank" class="support-link whatsapp-btn"><span>💬 WhatsApp Support</span></a>
+<a href="tel:9129191898" class="support-link call-btn"><span>📞 Call Developer</span></a>
+</div>
+<button class="close-btn" onclick="hideModal('devModal')">Return to Editor</button>
+</div>
+</div>
 <script>
-    // --- Service Worker (Original) ---
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW Error: ", err));
-        });
-    }
-        </script>
-    <script>
-    // --- PWA Logic (Original) ---
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('installBtn').style.display = 'block';
-    });
-    document.getElementById('installBtn').addEventListener('click', () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => {
-                document.getElementById('installBtn').style.display = 'none';
-                deferredPrompt = null;
-            });
-        }
-    });
-
-    // --- Dynamic File/Tab Logic ---
-    let extraTabs = [];
-
-    function openLocalFile(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        const name = file.name;
-        
-        reader.onload = function(e) {
-            const content = e.target.result;
-            if (name === 'index.html') { document.getElementById('html-code').value = content; switchTab('html'); }
-            else if (name === 'style.css') { document.getElementById('css-code').value = content; switchTab('css'); }
-            else if (name === 'script.js') { document.getElementById('js-code').value = content; switchTab('js'); }
-            else {
-                createDynamicTab(name, content);
-            }
-            runPreview();
-        };
-        reader.readAsText(file);
-    }
-
-    function createDynamicTab(name, content) {
-        const safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
-        if (document.getElementById('tab-' + safeId)) {
-            switchTab(safeId);
-            document.getElementById(safeId + '-code').value = content;
-            return;
-        }
-
-        extraTabs.push({id: safeId, name: name});
-
-        const tab = document.createElement('div');
-        tab.className = 'tab';
-        tab.id = 'tab-' + safeId;
-        tab.innerHTML = `${name} <span class="close-icon" onclick="closeDynamicTab(event, '${safeId}')">×</span>`;
-        tab.onclick = () => switchTab(safeId);
-        document.getElementById('tabs-container').appendChild(tab);
-
-        const panel = document.createElement('div');
-        panel.className = 'panel';
-        panel.id = 'panel-' + safeId;
-        panel.innerHTML = `
-            <div class="panel-header"><label>${name}</label><button class="btn" style="background:var(--primary);color:white" onclick="saveFile('${safeId}')">Save</button></div>
-            <textarea id="${safeId}-code" oninput="runPreview()">${content}</textarea>
-        `;
-        document.getElementById('panels-container').appendChild(panel);
-        
-        switchTab(safeId);
-        updateStyle();
-    }
-
-    function closeDynamicTab(e, id) {
-        e.stopPropagation();
-        document.getElementById('tab-' + id).remove();
-        document.getElementById('panel-' + id).remove();
-        extraTabs = extraTabs.filter(t => t.id !== id);
-        switchTab('html');
-    }
-
-    function switchTab(type) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        
-        const targetTab = document.getElementById('tab-' + type);
-        const targetPanel = document.getElementById('panel-' + type);
-        if(targetTab) targetTab.classList.add('active');
-        if(targetPanel) targetPanel.classList.add('active');
-
-        document.getElementById('tags-bar').style.display = (type === 'html' || type.includes('html')) ? 'flex' : 'none';
-    }
-
-    // --- Core Editor Functions ---
-    function runPreview() {
-        let html = document.getElementById("html-code").value;
-        let css = "<style>" + document.getElementById("css-code").value + "</style>";
-        let js = "<script>" + document.getElementById("js-code").value + "<\/script>";
-
-        extraTabs.forEach(t => {
-            const content = document.getElementById(t.id + "-code").value;
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => {}); }); }
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBtn').style.display = 'block'; });
+document.getElementById('installBtn').addEventListener('click', () => { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { document.getElementById('installBtn').style.display = 'none'; deferredPrompt = null; }); } });
+let extraTabs = [];
+function openLocalFile(event) { const files = event.target.files; for (let file of files) { readAndProcessFile(file); } }
+function openFolder(event) { const files = event.target.files; for (let file of files) { if (!file.name.startsWith('.')) { readAndProcessFile(file); } } }
+function readAndProcessFile(file) {
+    const reader = new FileReader();
+    const name = file.name;
+    reader.onload = function(e) {
+        const content = e.target.result;
+        if (name === 'index.html') { document.getElementById('html-code').value = content; switchTab('html'); }
+        else if (name === 'style.css') { document.getElementById('css-code').value = content; switchTab('css'); }
+        else if (name === 'script.js') { document.getElementById('js-code').value = content; switchTab('js'); }
+        else { createDynamicTab(name, content); }
+        runPreview();
+    };
+    reader.readAsText(file);
+}
+function createDynamicTab(name, content) {
+    const safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
+    if (document.getElementById('tab-' + safeId)) { switchTab(safeId); document.getElementById(safeId + '-code').value = content; return; }
+    extraTabs.push({id: safeId, name: name});
+    const tab = document.createElement('div');
+    tab.className = 'tab';
+    tab.id = 'tab-' + safeId;
+    tab.innerHTML = `${name} <span class="close-icon" onclick="closeDynamicTab(event, '${safeId}')">×</span>`;
+    tab.onclick = () => switchTab(safeId);
+    document.getElementById('tabs-container').appendChild(tab);
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.id = 'panel-' + safeId;
+    panel.innerHTML = `<div class="panel-header"><label>${name}</label><button class="btn" style="background:var(--primary);color:white" onclick="saveFile('${safeId}')">Save</button></div><textarea id="${safeId}-code" oninput="runPreview()">${content}</textarea>`;
+    document.getElementById('panels-container').appendChild(panel);
+    switchTab(safeId);
+    updateStyle();
+}
+function closeDynamicTab(e, id) { e.stopPropagation(); document.getElementById('tab-' + id).remove(); document.getElementById('panel-' + id).remove(); extraTabs = extraTabs.filter(t => t.id !== id); switchTab('html'); }
+function switchTab(type) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const targetTab = document.getElementById('tab-' + type);
+    const targetPanel = document.getElementById('panel-' + type);
+    if(targetTab) targetTab.classList.add('active');
+    if(targetPanel) targetPanel.classList.add('active');
+    document.getElementById('tags-bar').style.display = (type === 'html' || type.includes('html')) ? 'flex' : 'none';
+}
+function runPreview() {
+    let html = document.getElementById("html-code").value;
+    let css = "<style>" + document.getElementById("css-code").value + "</style>";
+    let js = "<script>" + document.getElementById("js-code").value + "<\/script>";
+    extraTabs.forEach(t => {
+        const el = document.getElementById(t.id + "-code");
+        if(el) {
+            const content = el.value;
             if (t.name.endsWith('.html')) html += content;
             else if (t.name.endsWith('.css')) css += "<style>" + content + "</style>";
             else if (t.name.endsWith('.js')) js += "<script>" + content + "<\/script>";
-        });
-
-        const outputFrame = document.getElementById("output").contentWindow.document;
-        outputFrame.open(); 
-        outputFrame.write(html + css + js); 
-        outputFrame.close();
-    }
-
-    function saveFile(type) {
-        const area = document.getElementById(type + (type.includes('_') ? '-code' : '-code'));
-        const content = area.value;
-        const blob = new Blob([content], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        const fileName = type.includes('_') ? type.replace(/_/g, '.') : `index.${type}`;
-        a.download = fileName;
-        a.click();
-    }
-
-    function insertTag(open, close) {
-        const textarea = document.querySelector('.panel.active textarea');
-        if(!textarea) return;
-        const start = textarea.selectionStart;
-        const text = textarea.value;
-        textarea.value = text.substring(0, start) + open + text.substring(textarea.selectionStart, textarea.selectionEnd) + close + text.substring(textarea.selectionEnd);
-        textarea.focus();
-        runPreview();
-    }
-
-    function searchInEditor(val) {
-        const activeTextarea = document.querySelector('.panel.active textarea');
-        if(!val || !activeTextarea) return;
-        const index = activeTextarea.value.toLowerCase().indexOf(val.toLowerCase());
-        if(index !== -1) {
-            activeTextarea.focus();
-            activeTextarea.setSelectionRange(index, index + val.length);
         }
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        document.getElementById('theme-status').innerText = `● Mode: ${isLight ? 'Light' : 'Dark'} | UTF-8`;
-    }
-
-    function updateStyle() {
-        const sz = document.getElementById('font-size').value;
-        const fm = document.getElementById('font-family').value;
-        document.querySelectorAll('textarea').forEach(t => { t.style.fontSize = sz; t.style.fontFamily = fm; });
-    }
-
-    async function shareProject() {
-        const text = `Check out my code on DevStudio Pro!\n\nBuilt by Kaushal.`;
-        if (navigator.share) {
-            try { await navigator.share({ title: 'DevStudio Pro', text: text, url: window.location.href }); } catch (err) {}
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link copied!");
-        }
-    }
-
-    function clearAll() { if(confirm("Are you sure?")) location.reload(); }
-    function showModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function hideModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    // --- Shortcuts (Original) ---
-    window.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
-        if (e.ctrlKey && e.key === 's') { e.preventDefault(); const current = document.querySelector('.tab.active').id.replace('tab-', ''); saveFile(current); }
-        if (e.altKey && e.key === '1') { e.preventDefault(); switchTab('html'); }
-        if (e.altKey && e.key === '2') { e.preventDefault(); switchTab('css'); }
-        if (e.altKey && e.key === '3') { e.preventDefault(); switchTab('js'); }
-        if (e.ctrlKey && e.key === 't') { e.preventDefault(); toggleTheme(); }
-        if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) { e.preventDefault(); clearAll(); }
     });
+    const outputFrame = document.getElementById("output").contentWindow.document;
+    outputFrame.open(); outputFrame.write(html + css + js); outputFrame.close();
+}
+function saveFile(type) {
+    const area = document.getElementById(type + (type.includes('_') ? '-code' : '-code'));
+    if(!area) return;
+    const blob = new Blob([area.value], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = type.includes('_') ? type.replace(/_/g, '.') : `index.${type}`;
+    a.click();
+}
+function insertTag(open, close) {
+    const textarea = document.querySelector('.panel.active textarea');
+    if(!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    textarea.value = textarea.value.substring(0, start) + open + textarea.value.substring(start, end) + close + textarea.value.substring(end);
+    textarea.focus();
+    textarea.setSelectionRange(start + open.length, end + open.length);
+    runPreview();
+}
+function insertSnippet(type) {
+    let snippet = "";
+    if (type === 'html5') snippet = `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>Document</title>\n</head>\n<body>\n\n</body>\n</html>`;
+    else if (type === 'flexbox') snippet = `display: flex;\njustify-content: center;\nalign-items: center;`;
+    else if (type === 'grid') snippet = `display: grid;\ngrid-template-columns: repeat(2, 1fr);\ngap: 10px;`;
+    else if (type === 'fetch') snippet = `fetch('https://api.example.com/data')\n.then(res => res.json())\n.then(data => console.log(data))\n.catch(err => console.error(err));`;
+    else if (type === 'dom') snippet = `const element = document.querySelector('#myElement');`;
+    insertTag(snippet, '');
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab' && document.activeElement.tagName === 'TEXTAREA') {
+        e.preventDefault();
+        const ta = document.activeElement;
+        const start = ta.selectionStart;
+        ta.value = ta.value.substring(0, start) + "    " + ta.value.substring(ta.selectionEnd);
+        ta.selectionStart = ta.selectionEnd = start + 4;
+    }
+});
+function searchInEditor(val) {
+    const activeTextarea = document.querySelector('.panel.active textarea');
+    if(!val || !activeTextarea) return;
+    const index = activeTextarea.value.toLowerCase().indexOf(val.toLowerCase());
+    if(index !== -1) { activeTextarea.focus(); activeTextarea.setSelectionRange(index, index + val.length); }
+}
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    document.getElementById('theme-status').innerText = `● Mode: ${isLight ? 'Light' : 'Dark'} | UTF-8`;
+}
+function updateStyle() {
+    const sz = document.getElementById('font-size').value;
+    const fm = document.getElementById('font-family').value;
+    document.querySelectorAll('textarea').forEach(t => { t.style.fontSize = sz; t.style.fontFamily = fm; });
+}
+async function shareProject() {
+    const text = `Check out my code on DevStudio Pro!\n\nBuilt by Kaushal.`;
+    if (navigator.share) { try { await navigator.share({ title: 'DevStudio Pro', text: text, url: window.location.href }); } catch (err) {} }
+    else { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }
+}
+function clearAll() { if(confirm("Are you sure?")) location.reload(); }
+function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+window.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
+    if (e.ctrlKey && e.key === 's') { e.preventDefault(); const activeTab = document.querySelector('.tab.active'); if(activeTab) saveFile(activeTab.id.replace('tab-', '')); }
+    if (e.altKey && e.key === '1') { e.preventDefault(); switchTab('html'); }
+    if (e.altKey && e.key === '2') { e.preventDefault(); switchTab('css'); }
+    if (e.altKey && e.key === '3') { e.preventDefault(); switchTab('js'); }
+    if (e.ctrlKey && e.key === 't') { e.preventDefault(); toggleTheme(); }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) { e.preventDefault(); clearAll(); }
+});
 </script>
-
 </body>
 </html>
