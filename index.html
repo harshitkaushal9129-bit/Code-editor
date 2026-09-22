@@ -21,14 +21,14 @@ header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content
 .logo-section { display: flex; align-items: center; gap: 10px; }
 .logo-img { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
 .logo-text { font-size: 18px; font-weight: bold; color: var(--primary); }
-.tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .tool-select, .tool-btn { background: #333; color: white; border: 1px solid #444; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
 #file-input, #folder-input { display: none; }
-.quick-tags { background: #2d2d2d; padding: 6px 10px; display: flex; gap: 8px; overflow-x: auto; overflow-y: visible; border-bottom: 1px solid var(--border); align-items: center; position: relative; z-index: 50; }
+.quick-tags { background: #2d2d2d; padding: 6px 10px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--border); align-items: center; }
 .tag-pill { background: #444; color: #ddd; padding: 3px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; transition: 0.2s; }
 .tag-pill:hover { background: var(--primary); border-color: white; }
 .dropdown-tools { position: relative; display: inline-block; }
-.dropdown-content { display: none; position: absolute; background-color: #252526; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.8); z-index: 9999; border: 1px solid #555; border-radius: 6px; left: 0; top: 100%; }
+.dropdown-content { display: none; position: absolute; background-color: #252526; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.9); z-index: 9999; border: 1px solid #555; border-radius: 6px; left: 0; top: 100%; }
 .dropdown-content div { color: #ffffff !important; background-color: #252526; padding: 10px 14px; font-size: 12px; cursor: pointer; border-bottom: 1px solid #333; }
 .dropdown-content div:last-child { border-bottom: none; }
 .dropdown-content div:hover { background-color: var(--primary) !important; color: #ffffff !important; }
@@ -114,6 +114,7 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 </div>
 </header>
 <div class="tools-bar">
+<div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
 <input type="file" id="file-input" onchange="openLocalFile(event)" multiple>
 <input type="file" id="folder-input" webkitdirectory directory multiple onchange="openFolder(event)">
 <select class="tool-select" id="font-size" onchange="updateStyle()">
@@ -129,16 +130,9 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 </select>
 <button class="tool-btn" onclick="toggleTheme()">🌓 Change Theme</button>
 </div>
-<div class="quick-tags" id="tags-bar">
-<div class="tag-pill" onclick="insertTag('<div>', '</div>')">DIV</div>
-<div class="tag-pill" onclick="insertTag('<span>', '</span>')">SPAN</div>
-<div class="tag-pill" onclick="insertTag('<button>', '</button>')">BUTTON</div>
-<div class="tag-pill" onclick="insertTag('<input type=\'text\'>', '')">INPUT</div>
-<div class="tag-pill" onclick="insertTag('<h1>', '</h1>')">H1</div>
-<div class="tag-pill" onclick="insertTag('<p>', '</p>')">P</div>
-<div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">LINK</div>
+<!-- Templates Dropdown moved here safely -->
 <div class="dropdown-tools">
-<div class="tag-pill" style="background:var(--primary); color:white;">⚡ Templates ▼</div>
+<div class="tool-btn" style="background: var(--primary); color: white; display: flex; align-items: center; gap: 5px;">⚡ Templates ▼</div>
 <div class="dropdown-content">
 <div onclick="insertSnippet('html5')">HTML5 Boilerplate</div>
 <div onclick="insertSnippet('flexbox')">CSS Flexbox Centering</div>
@@ -147,6 +141,15 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 <div onclick="insertSnippet('dom')">JS Query Selector</div>
 </div>
 </div>
+</div>
+<div class="quick-tags" id="tags-bar">
+<div class="tag-pill" onclick="insertTag('<div>', '</div>')">DIV</div>
+<div class="tag-pill" onclick="insertTag('<span>', '</span>')">SPAN</div>
+<div class="tag-pill" onclick="insertTag('<button>', '</button>')">BUTTON</div>
+<div class="tag-pill" onclick="insertTag('<input type=\'text\'>', '')">INPUT</div>
+<div class="tag-pill" onclick="insertTag('<h1>', '</h1>')">H1</div>
+<div class="tag-pill" onclick="insertTag('<p>', '</p>')">P</div>
+<div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">LINK</div>
 </div>
 <div class="main-layout">
 <div class="workspace-content">
