@@ -24,20 +24,14 @@ header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content
 .tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .tool-select, .tool-btn { background: #333; color: white; border: 1px solid #444; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
 #file-input, #folder-input { display: none; }
-.quick-tags { background: #2d2d2d; padding: 6px 10px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--border); align-items: center; }
-.tag-pill { background: #444; color: #ddd; padding: 3px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; transition: 0.2s; }
-.tag-pill:hover { background: var(--primary); border-color: white; }
-.dropdown-tools { position: relative; display: inline-block; }
-.dropdown-content { display: none; position: absolute; background-color: #252526; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.9); z-index: 9999; border: 1px solid #555; border-radius: 6px; left: 0; top: 100%; }
-.dropdown-content div { color: #ffffff !important; background-color: #252526; padding: 10px 14px; font-size: 12px; cursor: pointer; border-bottom: 1px solid #333; }
-.dropdown-content div:last-child { border-bottom: none; }
-.dropdown-content div:hover { background-color: var(--primary) !important; color: #ffffff !important; }
-.dropdown-tools:hover .dropdown-content { display: block; }
+.quick-tags { background: #2d2d2d; padding: 6px 15px; display: flex; gap: 10px; overflow-x: auto; border-bottom: 1px solid var(--border); align-items: center; }
+.tag-pill { background: #3a3a3a; color: #ddd; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 500; cursor: pointer; white-space: nowrap; border: 1px solid #444; transition: 0.2s; }
+.tag-pill:hover { background: var(--primary); border-color: var(--primary); color: white; }
 .main-layout { display: flex; flex: 1; overflow: hidden; position: relative; flex-direction: column; }
 .workspace-content { display: flex; flex: 1; overflow: hidden; position: relative; width: 100%; height: 100%; }
-.sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 25px; }
-.sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; }
-.sidebar-icon:hover { color: white; transform: scale(1.1); }
+.sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 20px; }
+.sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+.sidebar-icon:hover { color: white; background: #2a2a2a; transform: scale(1.05); }
 .editor-tabs { display: flex; background: #2d2d2d; border-bottom: 1px solid var(--border); overflow-x: auto; }
 .tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #999; border-right: 1px solid var(--border); white-space: nowrap; display: flex; align-items: center; }
 .tab.active { background: var(--editor-bg); color: white; border-top: 2px solid var(--primary); }
@@ -130,26 +124,15 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 </select>
 <button class="tool-btn" onclick="toggleTheme()">🌓 Change Theme</button>
 </div>
-<!-- Templates Dropdown moved here safely -->
-<div class="dropdown-tools">
-<div class="tool-btn" style="background: var(--primary); color: white; display: flex; align-items: center; gap: 5px;">⚡ Templates ▼</div>
-<div class="dropdown-content">
-<div onclick="insertSnippet('html5')">HTML5 Boilerplate</div>
-<div onclick="insertSnippet('flexbox')">CSS Flexbox Centering</div>
-<div onclick="insertSnippet('grid')">CSS Grid Layout</div>
-<div onclick="insertSnippet('fetch')">JS Fetch API Request</div>
-<div onclick="insertSnippet('dom')">JS Query Selector</div>
-</div>
-</div>
 </div>
 <div class="quick-tags" id="tags-bar">
-<div class="tag-pill" onclick="insertTag('<div>', '</div>')">DIV</div>
-<div class="tag-pill" onclick="insertTag('<span>', '</span>')">SPAN</div>
-<div class="tag-pill" onclick="insertTag('<button>', '</button>')">BUTTON</div>
-<div class="tag-pill" onclick="insertTag('<input type=\'text\'>', '')">INPUT</div>
-<div class="tag-pill" onclick="insertTag('<h1>', '</h1>')">H1</div>
-<div class="tag-pill" onclick="insertTag('<p>', '</p>')">P</div>
-<div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">LINK</div>
+<div class="tag-pill" onclick="insertTag('<div>', '</div>')">&lt;div&gt;</div>
+<div class="tag-pill" onclick="insertTag('<span>', '</span>')">&lt;span&gt;</div>
+<div class="tag-pill" onclick="insertTag('<button>', '</button>')">&lt;button&gt;</div>
+<div class="tag-pill" onclick="insertTag('<input type=\'text\'>', '')">&lt;input&gt;</div>
+<div class="tag-pill" onclick="insertTag('<h1>', '</h1>')">&lt;h1&gt;</div>
+<div class="tag-pill" onclick="insertTag('<p>', '</p>')">&lt;p&gt;</div>
+<div class="tag-pill" onclick="insertTag('<a href=\'#\'>', '</a>')">&lt;a&gt;</div>
 </div>
 <div class="main-layout">
 <div class="workspace-content">
@@ -157,9 +140,10 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 <div class="sidebar-icon" onclick="document.getElementById('file-input').click()" title="Open File">📂</div>
 <div class="sidebar-icon" onclick="document.getElementById('folder-input').click()" title="Import Folder">📁</div>
 <div class="sidebar-icon" onclick="shareProject()" title="Share">📤</div>
-<div class="sidebar-icon" onclick="showModal('shortcutModal')" title="Shortcuts">⌨️</div>
+<div class="sidebar-icon" onclick="showModal('shortcutModal')" title="Keyboard Shortcuts">⌨️</div>
+<div class="sidebar-icon" onclick="showModal('templateModal')" title="Code Templates" style="color: var(--accent);">⚡</div>
 <div style="flex: 1;"></div>
-<div class="sidebar-icon" onclick="showModal('devModal')" title="Settings">⚙️</div>
+<div class="sidebar-icon" onclick="showModal('devModal')" title="Settings / Developer">⚙️</div>
 </div>
 <div class="workspace">
 <div class="editor-panels">
@@ -223,6 +207,23 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 <button class="close-btn" onclick="hideModal('shortcutModal')">Got it!</button>
 </div>
 </div>
+
+<!-- New Template Modal -->
+<div id="templateModal" class="modal">
+<div class="modal-content">
+<h3>⚡ Quick Templates</h3>
+<p style="font-size: 12px; color: #aaa; margin-top: 5px;">Select a template to insert into your editor</p>
+<div class="shortcut-list">
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('html5')"><span>🌐 HTML5 Boilerplate</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('flexbox')"><span>📐 CSS Flexbox Centering</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('grid')"><span>📊 CSS Grid Layout</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('fetch')"><span>🔄 JS Fetch API Request</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('dom')"><span>🎯 JS Query Selector</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+</div>
+<button class="close-btn" onclick="hideModal('templateModal')">Cancel</button>
+</div>
+</div>
+
 <div id="devModal" class="modal">
 <div class="modal-content">
 <div class="dev-card">
@@ -236,7 +237,6 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 <div class="feature-item">✓ Code Minifier</div>
 </div>
 <div style="font-size: 11px; color: var(--accent); margin-bottom: 5px;">Build Version: 1.2.1 (Pro)</div>
-
 
 <!-- UPI QR Code Section -->
 <div style="margin-top: 15px;">
@@ -335,7 +335,6 @@ function switchTab(type) {
     const targetPanel = document.getElementById('panel-' + type);
     if(targetTab) targetTab.classList.add('active');
     if(targetPanel) targetPanel.classList.add('active');
-    document.getElementById('tags-bar').style.display = (type === 'html' || type.includes('html')) ? 'flex' : 'none';
 }
 
 function runPreview() {
@@ -414,7 +413,8 @@ function insertTag(open, close) {
     runPreview();
 }
 
-function insertSnippet(type) {
+function selectTemplate(type) {
+    hideModal('templateModal');
     let snippet = "";
     if (type === 'html5') snippet = `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>Document</title>\n</head>\n<body>\n\n</body>\n</html>`;
     else if (type === 'flexbox') snippet = `display: flex;\njustify-content: center;\nalign-items: center;`;
