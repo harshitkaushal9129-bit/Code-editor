@@ -7,6 +7,8 @@
 <meta name="theme-color" content="#007acc">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="Kaushalji.png">
+<!-- QRCode Generator Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root { --primary: #007acc; --bg: #0f0f0f; --panel: #1a1a1a; --border: #333; --text-color: #9cdcfe; --editor-bg: #1e1e1e; --accent: #f7df1e; --share-color: #6a1b9a; }
 body.light-mode { --bg: #ffffff; --panel: #f3f3f3; --border: #ccc; --text-color: #000000; --editor-bg: #ffffff; }
@@ -22,11 +24,11 @@ header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content
 .tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
 .tool-select, .tool-btn { background: #333; color: white; border: 1px solid #444; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
 #file-input, #folder-input { display: none; }
-.quick-tags { background: #2d2d2d; padding: 6px 10px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--border); align-items: center; }
+.quick-tags { background: #2d2d2d; padding: 6px 10px; display: flex; gap: 8px; overflow-x: auto; overflow-y: visible; border-bottom: 1px solid var(--border); align-items: center; position: relative; z-index: 50; }
 .tag-pill { background: #444; color: #ddd; padding: 3px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; transition: 0.2s; }
 .tag-pill:hover { background: var(--primary); border-color: white; }
 .dropdown-tools { position: relative; display: inline-block; }
-.dropdown-content { display: none; position: absolute; background-color: #252526; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.6); z-index: 100; border: 1px solid #555; border-radius: 6px; left: 0; }
+.dropdown-content { display: none; position: absolute; background-color: #252526; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.8); z-index: 9999; border: 1px solid #555; border-radius: 6px; left: 0; top: 100%; }
 .dropdown-content div { color: #ffffff !important; background-color: #252526; padding: 10px 14px; font-size: 12px; cursor: pointer; border-bottom: 1px solid #333; }
 .dropdown-content div:last-child { border-bottom: none; }
 .dropdown-content div:hover { background-color: var(--primary) !important; color: #ffffff !important; }
@@ -63,8 +65,8 @@ iframe { width: 100%; flex: 1; border: none; }
 .share-btn { background: var(--share-color); color: white; }
 footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
 .search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; font-size: 12px; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); }
-.modal-content { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); overflow-y: auto; }
+.modal-content { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; max-height: 90vh; overflow-y: auto; }
 .shortcut-list { text-align: left; margin-top: 15px; max-height: 250px; overflow-y: auto; }
 .shortcut-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
 .kbd { background: #333; padding: 2px 6px; border-radius: 4px; color: var(--accent); font-family: monospace; border-bottom: 2px solid #000; }
@@ -74,7 +76,10 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 .dev-info { color: #aaa; font-size: 13px; margin-bottom: 15px; }
 .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; text-align: left; }
 .feature-item { font-size: 11px; background: #2d2d2d; padding: 5px 8px; border-radius: 4px; color: #ddd; border-left: 2px solid var(--primary); }
-.support-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.qr-container { background: white; padding: 10px; border-radius: 8px; display: inline-block; margin: 15px 0 10px 0; }
+.qr-container img { display: block; margin: 0 auto; }
+.upi-text { font-size: 11px; color: var(--accent); word-break: break-all; margin-top: 5px; }
+.support-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
 .support-link { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; border-radius: 6px; font-weight: bold; transition: 0.2s; font-size: 14px; }
 .whatsapp-btn { background: #25d366; color: white; }
 .call-btn { background: #007acc; color: white; }
@@ -227,7 +232,15 @@ footer { background: var(--primary); color: white; padding: 4px 12px; font-size:
 <div class="feature-item">✓ Live Console Log</div>
 <div class="feature-item">✓ Code Minifier</div>
 </div>
-<div style="font-size: 11px; color: var(--accent); margin-bottom: 10px;">Build Version: 1.2.1 (Pro)</div>
+<div style="font-size: 11px; color: var(--accent); margin-bottom: 5px;">Build Version: 1.2.1 (Pro)</div>
+
+
+<!-- UPI QR Code Section -->
+<div style="margin-top: 15px;">
+<div style="font-size: 12px; color: #ccc; margin-bottom: 5px;">Support via UPI / GPay</div>
+<div class="qr-container" id="qrcode"></div>
+<div class="upi-text">mandavikaushal913@okaxis</div>
+</div>
 </div>
 <div class="support-btns">
 <a href="https://wa.me/9129191898" target="_blank" class="support-link whatsapp-btn"><span>💬 WhatsApp Support</span></a>
@@ -241,6 +254,25 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navi
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBtn').style.display = 'block'; });
 document.getElementById('installBtn').addEventListener('click', () => { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { document.getElementById('installBtn').style.display = 'none'; deferredPrompt = null; }); } });
+
+// --- Generate UPI QR Code ---
+window.addEventListener('DOMContentLoaded', () => {
+    try {
+        const upiString = "upi://pay?pa=mandavikaushal913@okaxis&pn=Kaushal&cu=INR";
+        const qrContainer = document.getElementById("qrcode");
+        if(qrContainer && typeof QRCode !== 'undefined') {
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: upiString,
+                width: 120,
+                height: 120,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+    } catch(e) {}
+});
 
 // --- Auto-Load Saved Data ---
 window.addEventListener('DOMContentLoaded', () => {
