@@ -4,165 +4,135 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#080d18">
-<title>Dragon IDE — Legendary Web Forge v4.0</title>
+<title>Dragon IDE — Legendary Web Forge v5.0</title>
 <style>
-:root{--bg:#080d18;--panel:#101827;--panel2:#131f31;--panel3:#1b2b42;--line:#293a55;--text:#e7eefb;--muted:#8fa2bf;--blue:#55a8ff;--cyan:#51e0d1;--gold:#f5bd62;--red:#ff6879;--green:#54d69a;--editor:#0b1220;--shadow:0 18px 55px #0008}
-*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--text);font:13px/1.45 Inter,Segoe UI,system-ui,sans-serif;overflow:hidden}button,input,select{font:inherit}button{cursor:pointer;color:inherit}.app{height:100dvh;display:flex;flex-direction:column;min-height:0;background:radial-gradient(ellipse at 75% -25%,#19365a55,transparent 45%),var(--bg)}
-.top{height:52px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#0b1322;border-bottom:1px solid var(--line);gap:10px}.brand{display:flex;align-items:center;gap:10px;min-width:180px}.dragon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#f4b85b,#a94724 55%,#54213a);box-shadow:0 0 22px #ec8b3b55;font-size:21px}.brandname{font-size:15px;font-weight:900;letter-spacing:.6px}.brandname span{color:var(--gold)}.brand small{display:block;color:#8397b5;font-size:9px;letter-spacing:2px;font-weight:700}.topright{display:flex;gap:7px;align-items:center}.btn{border:1px solid var(--line);background:#17253a;padding:7px 11px;border-radius:7px;font-size:11px;font-weight:750;white-space:nowrap;transition:.15s}.btn:hover{border-color:#6286b4;background:#203653;transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,#1679d5,#2456b7);border-color:#418fe2;color:#fff}.btn.run{background:linear-gradient(135deg,#168b65,#1c6f83);border-color:#34b68b;color:white}.btn.gold{background:linear-gradient(135deg,#a95a24,#80521c);border-color:#c98c42;color:#fff}.btn.flat{background:transparent}.btn.danger{color:#ff9ca5}.btn.tiny{padding:5px 8px}
-.menu{height:32px;flex:none;display:flex;align-items:center;gap:2px;padding:0 12px;background:#0e1828;border-bottom:1px solid var(--line);overflow:auto}.menu button{border:0;background:transparent;color:var(--muted);padding:6px 10px;border-radius:5px;font-size:11px;white-space:nowrap}.menu button:hover{background:var(--panel3);color:#fff}
-.toolbar{height:auto;min-height:42px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px;background:#111c2d;border-bottom:1px solid var(--line)}.group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.crumb{font-size:11px;color:#8094b2}.crumb b{color:#e5edf9}.select{background:#1a2940;border:1px solid var(--line);color:#dce7f7;border-radius:6px;padding:6px 8px;font-size:11px}
-.main{display:flex;flex:1;min-height:0;min-width:0}.activity{width:47px;flex:none;background:#0b1423;border-right:1px solid var(--line);display:flex;align-items:center;flex-direction:column;padding:9px 5px;gap:8px}.activity button{width:36px;height:36px;border:0;background:transparent;border-radius:8px;color:#90a3bf;font-size:17px}.activity button:hover,.activity button.active{background:#1d3451;color:white}.activity .bottom{margin-top:auto}
-.explorer{width:210px;min-width:150px;flex:none;background:#101a2a;border-right:1px solid var(--line);display:flex;flex-direction:column}.sidehead{height:38px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#a7b8d1;font-size:10px;font-weight:900;letter-spacing:1.5px}.tree{padding:3px 8px;overflow:auto;flex:1}.treecap{padding:7px;color:#8397b5;font-size:10px;font-weight:900;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}.file{width:100%;border:0;background:transparent;color:#b9c9de;padding:7px 8px;border-radius:6px;text-align:left;display:flex;align-items:center;gap:8px;font-size:11px}.file:hover{background:#1a2b42}.file.active{background:#203b5d;color:#fff}.file .dirty{margin-left:auto;color:var(--gold);display:none}.file.changed .dirty{display:block}.projectcard{margin:9px;padding:10px;border:1px solid #30415d;border-radius:9px;background:linear-gradient(145deg,#192c45,#131e30);font-size:10px;color:#9db0cb;line-height:1.6}
-.work{display:flex;flex:1;min-width:0;min-height:0;flex-direction:column}.tabs{height:38px;flex:none;display:flex;background:#101a2a;border-bottom:1px solid var(--line);overflow:auto}.tab{border:0;border-right:1px solid var(--line);background:#142034;color:#92a5c1;padding:0 13px;min-width:110px;display:flex;align-items:center;gap:8px;font-size:11px}.tab.active{background:var(--editor);color:#fff;border-top:2px solid var(--gold)}.tab .x{margin-left:auto;color:#7186a4;padding:2px 5px;border-radius:3px}.tab .x:hover{background:#293a55;color:#fff}.panes{display:flex;flex:1;min-height:0;min-width:0;position:relative}.editorpane{display:flex;flex:1;min-width:0;min-height:0;flex-direction:column;background:var(--editor)}.panehead{height:34px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:#0e1929;border-bottom:1px solid #22334c;color:#9fb1ca;font-size:10px}.panehead strong{color:#dce8f8;font-size:11px}.editorbody{display:flex;flex:1;min-height:0;overflow:hidden;position:relative}.gutter{width:43px;flex:none;background:#0a111e;color:#586d8a;text-align:right;padding:12px 9px 12px 0;overflow:hidden;white-space:pre;font:12px/1.65 ui-monospace,Consolas,monospace;user-select:none}.code{flex:1;min-width:0;min-height:0;resize:none;border:0;outline:0;background:var(--editor);color:#dce8f8;padding:12px 15px;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;overflow:auto;tab-size:2;caret-color:#ffd27b}.code::selection{background:#31577f}.minimap{width:45px;flex:none;border-left:1px solid #1c2a3e;background:repeating-linear-gradient(180deg,#1e3b5c 0 2px,transparent 2px 5px);opacity:.28}
-.splitter{width:5px;flex:none;background:#17263a;cursor:col-resize;position:relative}.splitter:hover,.splitter.dragging{background:var(--gold)}
-.preview{width:43%;min-width:230px;max-width:70%;display:flex;flex-direction:column;background:#fff}.previewhead{height:34px;flex:none;background:#eaf0f8;color:#263b56;display:flex;align-items:center;justify-content:space-between;padding:0 9px;font-size:10px;font-weight:900}.previewhead button{border:0;background:transparent;color:#39506f;padding:4px 7px;border-radius:4px}.previewhead button:hover{background:#d8e3f0}.frame{flex:1;width:100%;border:0;background:white}
-.terminal{height:150px;flex:none;display:none;flex-direction:column;background:#080f1c;border-top:1px solid var(--line)}.terminal.open{display:flex}.terminalhead{height:30px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 11px;color:#9fb1ca;font-size:10px;border-bottom:1px solid var(--line)}.terminalbody{overflow:auto;padding:7px 11px;color:#8fe1b9;font:11px/1.65 ui-monospace,monospace}.terminalbody .error{color:#ff8994}.terminalbody .warn{color:#ffd18c}
-.status{height:23px;flex:none;background:#174f86;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:9px}.status span{margin-right:12px}
-.modal{position:fixed;inset:0;background:#020712d9;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}.modal.show{display:flex}.dialog{width:min(580px,100%);max-height:90dvh;overflow:auto;background:#111c2d;border:1px solid #3a4d69;border-radius:15px;padding:21px;box-shadow:var(--shadow)}.dialog h2{font-size:18px;margin:0 0 8px}.dialog p{color:#a6b7ce;line-height:1.7;font-size:12px}.close{float:right}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}.infocard{background:#1a2a40;border:1px solid #30445f;border-radius:9px;padding:11px}.infocard b{display:block;color:var(--gold);font-size:10px;margin-bottom:4px}.infocard span{color:#d6e1ef;font-size:11px}.profile{display:flex;gap:13px;align-items:center;background:#1a2b43;border:1px solid #314967;border-radius:11px;padding:13px;margin:13px 0}.avatar{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}.profile h3{margin:0 0 3px}.profile small{color:#a5b8d1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.toast{position:fixed;bottom:35px;left:50%;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#203652;border:1px solid #52769e;padding:9px 14px;border-radius:8px;font-size:11px;z-index:90;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+:root{--bg:#070b14;--panel:#0d1522;--panel2:#111b2b;--panel3:#17253a;--line:#22334e;--text:#e3ecfb;--muted:#8197b6;--blue:#419eff;--cyan:#3fcfe2;--gold:#f3b453;--red:#ff6575;--green:#48d293;--editor:#0a101d;--shadow:0 20px 60px #0009}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--text);font:13px/1.4 Inter,sans-serif;overflow:hidden}button,input,select{font:inherit}button{cursor:pointer;color:inherit}
+.app{height:100dvh;display:flex;flex-direction:column;background:radial-gradient(ellipse at 80% -30%,#16335966,transparent 50%),var(--bg)}
+.top{height:48px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#09101c;border-bottom:1px solid var(--line);gap:8px}
+.brand{display:flex;align-items:center;gap:9px}.dragon{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(145deg,#f4b85b,#a94724 55%,#54213a);box-shadow:0 0 18px #ec8b3b44;font-size:18px}.brandname{font-size:14px;font-weight:900;letter-spacing:.5px}.brandname span{color:var(--gold)}.brand small{display:block;color:#7a90b0;font-size:8px;letter-spacing:1.5px;font-weight:700}
+.topright{display:flex;gap:6px;align-items:center}.btn{border:1px solid var(--line);background:#142236;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700;white-space:nowrap;transition:.12s}.btn:hover{border-color:#587ba7;background:#1d314d;transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,#1573cc,#1f4fa8);border-color:#3982da;color:#fff}.btn.run{background:linear-gradient(135deg,#137e5c,#196374);border-color:#2da276;color:#fff}.btn.gold{background:linear-gradient(135deg,#9c5221,#73471b);border-color:#bc823b;color:#fff}.btn.tiny{padding:4px 7px;font-size:10px}
+.menu{height:30px;flex:none;display:flex;align-items:center;gap:2px;padding:0 10px;background:#0b1320;border-bottom:1px solid var(--line);overflow:auto}.menu button{border:0;background:transparent;color:var(--muted);padding:5px 8px;border-radius:4px;font-size:11px;white-space:nowrap}.menu button:hover{background:var(--panel3);color:#fff}
+.toolbar{height:38px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 10px;background:#0f1826;border-bottom:1px solid var(--line)}.group{display:flex;align-items:center;gap:6px}.crumb{font-size:11px;color:#7c91b0}.crumb b{color:#e2ecfb}.select{background:#17263d;border:1px solid var(--line);color:#d3e1f5;border-radius:5px;padding:4px 6px;font-size:11px}
+.main{display:flex;flex:1;min-height:0;min-width:0}.activity{width:44px;flex:none;background:#080e1a;border-right:1px solid var(--line);display:flex;align-items:center;flex-direction:column;padding:8px 4px;gap:6px}.activity button{width:34px;height:34px;border:0;background:transparent;border-radius:7px;color:#859bb8;font-size:16px}.activity button:hover,.activity button.active{background:#192d47;color:#fff}.activity .bottom{margin-top:auto}
+.explorer{width:200px;flex:none;background:#0d1624;border-right:1px solid var(--line);display:flex;flex-direction:column}.sidehead{height:34px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:#9bb0cc;font-size:10px;font-weight:900;letter-spacing:1px}.tree{padding:3px 6px;overflow:auto;flex:1}.treecap{padding:5px;color:#778dae;font-size:9px;font-weight:900;letter-spacing:1px}.file{width:100%;border:0;background:transparent;color:#abc0de;padding:6px 8px;border-radius:5px;text-align:left;display:flex;align-items:center;gap:7px;font-size:11px}.file:hover{background:#17283f}.file.active{background:#1e3553;color:#fff}.file .x-del{margin-left:auto;color:#7186a4;padding:2px 5px;border-radius:3px}.file .x-del:hover{background:#293f5d;color:#ff8994}
+.work{display:flex;flex:1;min-width:0;min-height:0;flex-direction:column}.tabs{height:34px;flex:none;display:flex;background:#0d1624;border-bottom:1px solid var(--line);overflow:auto}.tab{border:0;border-right:1px solid var(--line);background:#111b2b;color:#8499b7;padding:0 11px;min-width:100px;display:flex;align-items:center;gap:7px;font-size:11px}.tab.active{background:var(--editor);color:#fff;border-top:2px solid var(--gold)}.tab .x{margin-left:auto;color:#6e85a6;padding:2px 4px}.tab .x:hover{background:#223652;color:#fff}
+.panes{display:flex;flex:1;min-height:0;min-width:0;position:relative}.editorpane{display:flex;flex:1;min-width:0;min-height:0;flex-direction:column;background:var(--editor)}.panehead{height:32px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:#0b1320;border-bottom:1px solid #1e2e46;color:#93a8c4;font-size:10px}.panehead strong{color:#d5e4f8;font-size:11px}.editorbody{display:flex;flex:1;min-height:0;overflow:hidden;position:relative}.gutter{width:40px;flex:none;background:#070d17;color:#526786;text-align:right;padding:10px 8px 10px 0;overflow:hidden;white-space:pre;font:12px/1.65 monospace;user-select:none}.code{flex:1;min-width:0;min-height:0;resize:none;border:0;outline:0;background:var(--editor);color:#d8e6f7;padding:10px 14px;font:13px/1.65 ui-monospace,monospace;white-space:pre;overflow:auto;tab-size:2;caret-color:#ffd27b}.code::selection{background:#2a4d75}
+.splitter{width:4px;flex:none;background:#152336;cursor:col-resize}.splitter:hover,.splitter.dragging{background:var(--gold)}
+.preview{width:42%;min-width:200px;max-width:75%;display:flex;flex-direction:column;background:#fff}.previewhead{height:32px;flex:none;background:#e5edf7;color:#20344f;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:10px;font-weight:900}.previewhead button{border:0;background:transparent;color:#2f4664;padding:3px 6px;border-radius:4px}.previewhead button:hover{background:#cfe0f3}.frame{flex:1;width:100%;border:0;background:white}
+.terminal{height:140px;flex:none;display:none;flex-direction:column;background:#060a12;border-top:1px solid var(--line)}.terminal.open{display:flex}.terminalhead{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:#93a8c4;font-size:10px;border-bottom:1px solid var(--line)}.terminalbody{overflow:auto;padding:6px 10px;color:#7ee6b0;font:11px/1.65 monospace}
+.status{height:22px;flex:none;background:#144473;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:9px}.status span{margin-right:10px}
+.modal{position:fixed;inset:0;background:#01050fd8;backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:12px;z-index:50}.modal.show{display:flex}.dialog{width:min(560px,100%);max-height:88vh;overflow:auto;background:#0e1726;border:1px solid #304461;border-radius:14px;padding:18px;box-shadow:var(--shadow)}.dialog h2{font-size:17px;margin:0 0 6px}.dialog p{color:#9db0cb;line-height:1.6;font-size:12px}.close{float:right}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.infocard{background:#152236;border:1px solid #273b56;border-radius:8px;padding:10px}.infocard b{display:block;color:var(--gold);font-size:10px;margin-bottom:3px}.infocard span{color:#c9d7ec;font-size:11px}
+.profile{display:flex;gap:12px;align-items:center;background:#152338;border:1px solid #2b4160;border-radius:10px;padding:11px;margin:11px 0}.avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}.profile h3{margin:0 0 2px}.profile small{color:#9eb2cc}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1a2940;font-size:12px}.setting-row:last-child{border-bottom:0}
+.toast{position:fixed;bottom:32px;left:50%;transform:translate(-50%,10px);opacity:0;pointer-events:none;background:#1b2d47;border:1px solid #436694;padding:8px 13px;border-radius:7px;font-size:11px;z-index:90;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
 body.editor-full .activity,body.editor-full .explorer,body.editor-full .toolbar,body.editor-full .menu,body.editor-full .top,body.editor-full .status,body.editor-full .preview,body.editor-full .splitter,body.editor-full .tabs{display:none!important}
 body.editor-full .main,body.editor-full .work,body.editor-full .panes,body.editor-full .editorpane{width:100%;height:100%;flex:1}
 body.preview-full .activity,body.preview-full .explorer,body.preview-full .toolbar,body.preview-full .menu,body.preview-full .top,body.preview-full .status,body.preview-full .editorpane,body.preview-full .splitter,body.preview-full .tabs{display:none!important}
 body.preview-full .main,body.preview-full .work,body.preview-full .panes,body.preview-full .preview{width:100%;height:100%;max-width:none;flex:1}
-@media(max-width:760px){.top{height:46px;padding:0 8px}.brand{min-width:140px}.brand small{display:none}.topright .wide{display:none}.explorer{display:none}.activity{width:40px}.toolbar{align-items:flex-start}.preview{width:42%;min-width:185px}.btn{padding:6px 8px;font-size:10px}}
-@media(max-width:570px){.panes{flex-direction:column}.editorpane{flex:1;min-height:42%}.splitter{width:100%;height:5px;cursor:row-resize}.preview{width:100%;max-width:none;min-width:0;height:42%;min-height:140px}.toolbar{min-height:38px}.crumb{display:none}.tab{min-width:92px;padding:0 8px}.minimap{display:none}.status .right{display:none}}
+@media(max-width:600px){.explorer{display:none}.topright .wide{display:none}.preview{width:40%}}
 </style>
 </head>
 <body>
 <div class="app">
 <header class="top">
- <div class="brand"><div class="dragon">🐉</div><div class="brandname">DRAGON <span>IDE</span><small>LEGENDARY WEB FORGE · v4.0</small></div></div>
+ <div class="brand"><div class="dragon">🐉</div><div class="brandname">DRAGON <span>IDE</span><small>MASTER FORGE v5.0</small></div></div>
  <div class="topright">
-  <button class="btn flat wide" onclick="openModal('appInfo')">ⓘ About</button>
-  <button class="btn flat wide" onclick="openModal('developerInfo')">♙ Developer</button>
-  <button class="btn" onclick="toggleTheme()">◐ Theme</button>
-  <button class="btn gold" onclick="openModal('command')">⌘ Command</button>
+  <button class="btn gold" onclick="openModal('settingsModal')">⚙️ Settings Hub</button>
   <button class="btn run" onclick="runPreview()">▶ Run</button>
  </div>
 </header>
 <nav class="menu">
- <button onclick="newFileDialog()">+ New File</button>
- <button onclick="document.getElementById('filesInput').click()">Import</button>
- <button onclick="saveAll()">Save All</button>
- <button onclick="runPreview()">Run Project</button>
- <button onclick="toggleTerminal()">Terminal</button>
- <button onclick="openModal('snippets')">Snippets</button>
- <button onclick="openModal('shortcuts')">Shortcuts</button>
- <button onclick="formatCode()">Format</button>
- <button onclick="openModal('appInfo')">Help</button>
+ <button onclick="newFileDialog()">+ New File</button><button onclick="document.getElementById('filesInput').click()">Import</button><button onclick="saveAll()">Save All</button><button onclick="runPreview()">Run Project</button><button onclick="toggleTerminal()">Terminal</button><button onclick="openModal('snippets')">Snippets</button><button onclick="openModal('shareModal')">📤 Share App</button><button onclick="openModal('settingsModal')">⚙️ Settings</button>
 </nav>
 <section class="toolbar">
- <div class="group">
-  <span class="crumb">WORKSPACE / <b>dragon-forge</b></span>
-  <button class="btn tiny" onclick="document.getElementById('filesInput').click()">＋ Files</button>
-  <button class="btn tiny" onclick="document.getElementById('folderInput').click()">▣ Folder</button>
-  <select class="select" id="fontSize" onchange="changeFont()">
-   <option value="12">12 px</option>
-   <option value="13" selected>13 px</option>
-   <option value="14">14 px</option>
-   <option value="16">16 px</option>
-  </select>
- </div>
- <div class="group">
-  <button class="btn tiny" onclick="toggleEditorFull()">⛶ Code Full</button>
-  <button class="btn tiny" onclick="togglePreviewFull()">◱ Output Full</button>
-  <button class="btn tiny" onclick="toggleTerminal()">▤ Console</button>
-  <button class="btn tiny primary" onclick="downloadProject()">⇩ Export ZIP / Files</button>
- </div>
+ <div class="group"><span class="crumb">WORKSPACE / <b>dragon-master</b></span><select class="select" id="fontSize" onchange="changeFont()"><option value="12">12 px</option><option value="13" selected>13 px</option><option value="14">14 px</option><option value="16">16 px</option></select></div>
+ <div class="group"><button class="btn tiny" onclick="toggleEditorFull()">⛶ Code Full</button><button class="btn tiny" onclick="togglePreviewFull()">◱ Output Full</button><button class="btn tiny primary" onclick="downloadProject()">⇩ Export ZIP</button></div>
 </section>
-<input id="filesInput" type="file" multiple hidden accept=".html,.htm,.css,.js,.json,.txt,.md" onchange="importFiles(this.files)">
-<input id="folderInput" type="file" webkitdirectory multiple hidden onchange="importFiles(this.files)">
+<input id="filesInput" type="file" multiple hidden accept=".html,.htm,.css,.js,.json" onchange="importFiles(this.files)">
 
 <main class="main">
  <aside class="activity">
-  <button class="active" title="Explorer" onclick="toggleExplorer()">▤</button>
-  <button title="Snippets" onclick="openModal('snippets')">⚡</button>
-  <button title="Search" onclick="searchCode()">⌕</button>
-  <button title="Terminal" onclick="toggleTerminal()">▣</button>
-  <button class="bottom" title="Developer" onclick="openModal('developerInfo')">♙</button>
+  <button class="active" title="Explorer" onclick="toggleExplorer()">▤</button><button title="Snippets" onclick="openModal('snippets')">⚡</button><button title="Share App" onclick="openModal('shareModal')">📤</button><button title="Settings Hub" onclick="openModal('settingsModal')">⚙️</button><button title="Terminal" onclick="toggleTerminal()">▣</button>
+  <button class="bottom" title="Developer Profile" onclick="openModal('developerInfo')">♙</button>
  </aside>
-
  <aside class="explorer" id="explorer">
-  <div class="sidehead"><span>EXPLORER</span><button class="btn tiny flat" onclick="newFileDialog()" title="New File">+</button></div>
-  <div class="tree" id="fileTree"><div class="treecap"><span>⌄ FILES</span></div></div>
-  <div class="projectcard"><b>🐉 DRAGON ENGINE</b><br>Live Console Active<br>UTF-8 Local Storage<br>Craft boldly.</div>
+  <div class="sidehead"><span>PROJECT FILES</span><button class="btn tiny flat" onclick="newFileDialog()">+</button></div>
+  <div class="tree" id="fileTree"></div>
+  <div style="padding:8px;font-size:10px;color:#7087a8;border-top:1px solid var(--line)">🐉 Kaushalji Forge</div>
  </aside>
-
  <section class="work">
   <div class="tabs" id="tabContainer"></div>
   <div class="panes" id="panes">
    <section class="editorpane" id="editorPane">
     <div class="panehead"><strong id="fileTitle">index.html</strong><span>UTF-8 · Tab: 2 · <span id="language">HTML</span></span></div>
-    <div class="editorbody">
-     <div class="gutter" id="gutter">1</div>
-     <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Source code editor"></textarea>
-     <div class="minimap"></div>
-    </div>
+    <div class="editorbody"><div class="gutter" id="gutter">1</div><textarea id="code" class="code" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" wrap="off"></textarea><div class="minimap"></div></div>
    </section>
-   <div class="splitter" id="splitter" title="Drag to resize"></div>
+   <div class="splitter" id="splitter"></div>
    <section class="preview" id="previewPane">
-    <div class="previewhead">
-     <span>◉ LIVE OUTPUT</span>
-     <div>
-      <button onclick="runPreview()" title="Refresh preview">↻ Refresh</button>
-      <button onclick="openPreviewTab()" title="Open in new tab">↗</button>
-     </div>
-    </div>
+    <div class="previewhead"><span>◉ LIVE OUTPUT</span><div><button onclick="runPreview()">↻ Refresh</button><button onclick="openPreviewTab()">↗</button></div></div>
     <iframe class="frame" id="frame" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-same-origin"></iframe>
    </section>
   </div>
   <section class="terminal" id="terminal">
-   <div class="terminalhead">
-    <span>TERMINAL &amp; CONSOLE</span>
-    <button class="btn tiny" onclick="clearTerminal()">Clear</button>
-   </div>
-   <div class="terminalbody" id="terminalBody">Dragon IDE v4.0 initialized. Ready to forge.</div>
+   <div class="terminalhead"><span>TERMINAL &amp; CONSOLE</span><button class="btn tiny" onclick="clearTerminal()">Clear</button></div>
+   <div class="terminalbody" id="terminalBody">Dragon IDE v5.0 Master Forge initialized. Ready.</div>
   </section>
  </section>
 </main>
-
-<footer class="status">
- <div><span id="statusMsg">● Ready</span><span id="cursor">Ln 1, Col 1</span></div>
- <div class="right"><span>HTML/CSS/JS</span><span>Dragon IDE v4.0</span><span>UTF-8</span></div>
-</footer>
+<footer class="status"><div><span id="statusMsg">● Ready</span><span id="cursor">Ln 1, Col 1</span></div><div class="right"><span>Kaushalji IDE</span><span>v5.0</span></div></footer>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Modals -->
-<div class="modal" id="appInfo">
+<!-- Settings Hub Modal -->
+<div class="modal" id="settingsModal">
  <div class="dialog">
-  <button class="btn close" onclick="closeModal('appInfo')">✕</button>
-  <h2>🐉 Dragon IDE — Legendary Web Forge v4.0</h2>
-  <p>An advanced browser-based development workspace featuring multi-file support, live output preview, console log piping, local storage persistence, snippets, and project exporting.</p>
-  <div class="grid">
-   <div class="infocard"><b>STUDIO EDITOR</b><span>Line numbers, smart indentation, tab support, and shortcuts.</span></div>
-   <div class="infocard"><b>LIVE CONSOLE</b><span>Captures console.log, warnings, and errors from your preview.</span></div>
-   <div class="infocard"><b>MULTI-FILE</b><span>Create, edit, switch, and delete HTML, CSS, JS files instantly.</span></div>
-   <div class="infocard"><b>EXPORT TOOLS</b><span>Download individual files or bundle your entire project.</span></div>
+  <button class="btn close" onclick="closeModal('settingsModal')">✕</button>
+  <h2>⚙️ Settings &amp; Tool Hub</h2>
+  <p>Manage workspace preferences, developer configurations, and editor tools.</p>
+  <div style="margin-top:12px">
+   <div class="setting-row"><span>Dark / Light Theme Mode</span><button class="btn tiny" onclick="toggleTheme()">Toggle Theme</button></div>
+   <div class="setting-row"><span>Code Formatting Engine</span><button class="btn tiny primary" onclick="formatCode();closeModal('settingsModal')">Format Active Code</button></div>
+   <div class="setting-row"><span>Clear Local Workspace Data</span><button class="btn tiny danger" onclick="clearStorage()">Reset Storage</button></div>
+   <div class="setting-row"><span>Keyboard Shortcuts Guide</span><button class="btn tiny" onclick="openModal('shortcuts');closeModal('settingsModal')">View Shortcuts</button></div>
+   <div class="setting-row"><span>App Info &amp; Version</span><button class="btn tiny" onclick="openModal('appInfo');closeModal('settingsModal')">About IDE</button></div>
+   <div class="setting-row"><span>Developer Profile (Kaushalji)</span><button class="btn tiny gold" onclick="openModal('developerInfo');closeModal('settingsModal')">View Profile</button></div>
   </div>
-  <div class="actions">
-   <button class="btn gold" onclick="closeModal('appInfo')">Resume Coding</button>
-   <button class="btn" onclick="openModal('developerInfo')">Developer Profile →</button>
-  </div>
+  <div class="actions"><button class="btn gold" onclick="closeModal('settingsModal')">Save &amp; Close</button></div>
  </div>
 </div>
 
+<!-- Share App Modal -->
+<div class="modal" id="shareModal">
+ <div class="dialog">
+  <button class="btn close" onclick="closeModal('shareModal')">✕</button>
+  <h2>📤 Share Dragon IDE</h2>
+  <p>Share this powerful IDE application or export your current code project instantly.</p>
+  <div class="grid">
+   <div class="infocard"><b>COPY APP LINK</b><span>Share web forge URL with friends.</span><button class="btn tiny primary" style="margin-top:6px" onclick="copyShareLink()">Copy Link</button></div>
+   <div class="infocard"><b>EXPORT FILES</b><span>Download all project files as a bundle.</span><button class="btn tiny gold" style="margin-top:6px" onclick="downloadProject()">Download ZIP</button></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="closeModal('shareModal')">Close</button></div>
+ </div>
+</div>
+
+<!-- Developer Profile Modal -->
 <div class="modal" id="developerInfo">
  <div class="dialog">
   <button class="btn close" onclick="closeModal('developerInfo')">✕</button>
   <h2>Developer Profile</h2>
   <div class="profile">
-   <img class="avatar" src="Kaushalji.png" alt="Kaushal" onerror="this.style.display='none'">
+   <img class="avatar" src="Kaushalji.png" alt="Kaushalji" onerror="this.style.display='none'">
    <div>
-    <h3>Kaushal</h3>
+    <h3>Kaushalji</h3>
     <small>Full Stack Web Developer &amp; Tech Educator</small>
    </div>
   </div>
-  <p>Creating professional web applications, learning portals, and developer utilities.</p>
+  <p>Building advanced educational web applications, portal frameworks, and browser-based productivity utilities.</p>
   <div class="grid">
-   <div class="infocard"><b>SPECIALTIES</b><span>Frontend Architecture, PWA &amp; Web Tooling</span></div>
-   <div class="infocard"><b>TECHNOLOGY</b><span>HTML5, CSS3, JavaScript, AngularJS, Python, IoT</span></div>
+   <div class="infocard"><b>EXPERTISE</b><span>Frontend Architecture &amp; PWA Tooling</span></div>
+   <div class="infocard"><b>STACK</b><span>HTML5, CSS3, JS, AngularJS, Python</span></div>
   </div>
   <div class="actions">
    <a class="btn gold" style="text-decoration:none" href="https://harshitkaushal9129-bit.github.io/full-forms-for-o-level/index.html" target="_blank" rel="noopener">NIELIT O Level Master Portal ↗</a>
@@ -171,143 +141,72 @@ body.preview-full .main,body.preview-full .work,body.preview-full .panes,body.pr
  </div>
 </div>
 
+<!-- App Info Modal -->
+<div class="modal" id="appInfo">
+ <div class="dialog"><button class="btn close" onclick="closeModal('appInfo')">✕</button><h2>🐉 Dragon IDE v5.0</h2><p>Professional offline-first mobile &amp; desktop web development suite built by Kaushalji.</p><div class="actions"><button class="btn gold" onclick="closeModal('appInfo')">Close</button></div></div>
+</div>
+
+<!-- Shortcuts Modal -->
 <div class="modal" id="shortcuts">
- <div class="dialog">
-  <button class="btn close" onclick="closeModal('shortcuts')">✕</button>
-  <h2>⌨ Keyboard Shortcuts</h2>
-  <div class="grid">
-   <div class="infocard"><b>Ctrl + Enter</b><span>Run preview</span></div>
-   <div class="infocard"><b>Ctrl + S</b><span>Save all files</span></div>
-   <div class="infocard"><b>Alt + 1 / 2 / 3...</b><span>Switch open files</span></div>
-   <div class="infocard"><b>Ctrl + Shift + E</b><span>Code fullscreen</span></div>
-   <div class="infocard"><b>Ctrl + Shift + O</b><span>Output fullscreen</span></div>
-   <div class="infocard"><b>Ctrl + `</b><span>Toggle terminal</span></div>
-  </div>
- </div>
-</div>
-
-<div class="modal" id="snippets">
- <div class="dialog">
-  <button class="btn close" onclick="closeModal('snippets')">✕</button>
-  <h2>⚡ Code Snippets</h2>
-  <p>Insert boilerplate templates into active file.</p>
-  <div class="grid">
-   <button class="btn" onclick="insertSnippet('html5')">HTML5 Boilerplate</button>
-   <button class="btn" onclick="insertSnippet('section')">HTML Section Card</button>
-   <button class="btn" onclick="insertSnippet('flex')">CSS Flex Center</button>
-   <button class="btn" onclick="insertSnippet('grid')">CSS Responsive Grid</button>
-   <button class="btn" onclick="insertSnippet('fetch')">JS Fetch API Template</button>
-   <button class="btn" onclick="insertSnippet('event')">JS Event Listener</button>
-  </div>
- </div>
-</div>
-
-<div class="modal" id="command">
- <div class="dialog">
-  <button class="btn close" onclick="closeModal('command')">✕</button>
-  <h2>⌘ Command Center</h2>
-  <div class="grid">
-   <button class="btn run" onclick="runPreview();closeModal('command')">▶ Run Project</button>
-   <button class="btn" onclick="saveAll();closeModal('command')">▣ Save All</button>
-   <button class="btn" onclick="newFileDialog();closeModal('command')">+ Create New File</button>
-   <button class="btn" onclick="toggleEditorFull();closeModal('command')">⛶ Code Fullscreen</button>
-   <button class="btn" onclick="togglePreviewFull();closeModal('command')">◱ Output Fullscreen</button>
-   <button class="btn" onclick="toggleTerminal();closeModal('command')">▤ Toggle Terminal</button>
-   <button class="btn" onclick="openModal('snippets');closeModal('command')">⚡ Snippets</button>
-   <button class="btn" onclick="downloadProject();closeModal('command')">⇩ Export Project</button>
-  </div>
- </div>
+ <div class="dialog"><button class="btn close" onclick="closeModal('shortcuts')">✕</button><h2>⌨ Shortcuts</h2><div class="grid"><div class="infocard"><b>Ctrl + Enter</b><span>Run Preview</span></div><div class="infocard"><b>Ctrl + S</b><span>Save All</span></div></div><div class="actions"><button class="btn gold" onclick="closeModal('shortcuts')">Close</button></div></div>
 </div>
 
 <script>
 let files = {
-  'index.html': { name: 'index.html', lang: 'HTML', code: '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Dragon Project</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <main class="hero">\n    <div class="dragon">🐉</div>\n    <h1>Dragon IDE v4.0</h1>\n    <p>Your legendary web forge is ready.</p>\n    <button id="forgeBtn">Click Me</button>\n  </main>\n  <script src="script.js"><\/script>\n</body>\n</html>' },
-  'style.css': { name: 'style.css', lang: 'CSS', code: '* { box-sizing: border-box; }\nbody {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  font-family: system-ui, sans-serif;\n  background: #0d1b2a;\n  color: #e0fbfc;\n}\n.hero { text-align: center; padding: 40px; }\n.dragon { font-size: 64px; }\nbutton {\n  border: 0; border-radius: 8px; padding: 12px 24px;\n  background: #f5bd62; color: #111; font-weight: bold; cursor: pointer;\n}' },
-  'script.js': { name: 'script.js', lang: 'JAVASCRIPT', code: "document.querySelector('#forgeBtn')?.addEventListener('click', () => {\n  alert('Dragon forge active!');\n  console.log('Button clicked successfully in preview.');\n});" }
+  'index.html': { name: 'index.html', lang: 'HTML', code: '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Dragon Forge</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <div class="box">\n    <h1>Dragon IDE v5.0</h1>\n    <p>Crafted by Kaushalji</p>\n    <button id="btn">Click</button>\n  </div>\n  <script src="script.js"><\/script>\n</body>\n</html>' },
+  'style.css': { name: 'style.css', lang: 'CSS', code: 'body { background: #0c1524; color: #fff; font-family: sans-serif; display: grid; place-content: center; height: 100vh; margin: 0; }\n.box { background: #162235; padding: 30px; border-radius: 12px; text-align: center; border: 1px solid #2b3e5b; }\nbutton { background: #f3b453; border: 0; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }' },
+  'script.js': { name: 'script.js', lang: 'JAVASCRIPT', code: "document.getElementById('btn')?.addEventListener('click', () => {\n  alert('Forge active!');\n  console.log('Dragon IDE console running smoothly.');\n});" }
 };
-
-const storageKey = 'dragon_ide_v4_';
-let activeFile = 'index.html';
-let toastTimer = null;
-const editor = document.getElementById('code');
+let activeFile = 'index.html', storageKey = 'dragon_ide_v5_', editor = document.getElementById('code');
 
 function initIDE() {
-  // Load saved files from localStorage if present
-  Object.keys(files).forEach(filename => {
-    let saved = localStorage.getItem(storageKey + filename);
-    if (saved !== null) files[filename].code = saved;
+  Object.keys(files).forEach(fn => {
+    let saved = localStorage.getItem(storageKey + fn);
+    if (saved !== null) files[fn].code = saved;
   });
-  
-  renderExplorer();
-  renderTabs();
-  switchFile('index.html');
-  runPreview();
+  renderExplorer(); renderTabs(); switchFile('index.html'); runPreview();
 }
 
 function renderExplorer() {
-  const tree = document.getElementById('fileTree');
-  let html = '<div class="treecap"><span>⌄ FILES</span></div>';
+  let h = '<div class="treecap">FILES</div>';
   Object.keys(files).forEach(fn => {
-    let icon = fn.endsWith('.html') ? '🌐' : fn.endsWith('.css') ? '🎨' : fn.endsWith('.js') ? '🟨' : '📄';
-    let activeClass = fn === activeFile ? ' active' : '';
-    let isChanged = files[fn].dirty ? ' changed' : '';
-    html += `<button class="file${activeClass}${isChanged}" data-file="${fn}" onclick="switchFile('${fn}')">${icon} ${fn} <span class="dirty" onclick="event.stopPropagation();closeFile('${fn}')">×</span></button>`;
+    let icon = fn.endsWith('.css') ? '🎨' : fn.endsWith('.js') ? '🟨' : '🌐';
+    h += `<button class="file ${fn===activeFile?'active':''}" onclick="switchFile('${fn}')">${icon} ${fn} <span class="x-del" onclick="event.stopPropagation();closeFile('${fn}')">×</span></button>`;
   });
-  tree.innerHTML = html;
+  document.getElementById('fileTree').innerHTML = h;
 }
 
 function renderTabs() {
-  const container = document.getElementById('tabContainer');
-  let html = '';
+  let h = '';
   Object.keys(files).forEach(fn => {
-    let icon = fn.endsWith('.html') ? '🌐' : fn.endsWith('.css') ? '🎨' : fn.endsWith('.js') ? '🟨' : '📄';
-    let activeClass = fn === activeFile ? ' active' : '';
-    html += `<button class="tab${activeClass}" id="tab-${fn}" onclick="switchFile('${fn}')">${icon} ${fn} <span class="x" onclick="event.stopPropagation();closeFile('${fn}')">×</span></button>`;
+    let icon = fn.endsWith('.css') ? '🎨' : fn.endsWith('.js') ? '🟨' : '🌐';
+    h += `<button class="tab ${fn===activeFile?'active':''}" onclick="switchFile('${fn}')">${icon} ${fn} <span class="x" onclick="event.stopPropagation();closeFile('${fn}')">×</span></button>`;
   });
-  container.innerHTML = html;
+  document.getElementById('tabContainer').innerHTML = h;
 }
 
-function switchFile(filename) {
-  if (!files[filename]) return;
-  files[activeFile].code = editor.value; // save current
-  activeFile = filename;
-  editor.value = files[filename].code;
-  
-  document.getElementById('fileTitle').textContent = filename;
-  document.getElementById('language').textContent = files[filename].lang;
-  renderExplorer();
-  renderTabs();
-  updateGutter();
-  updateCursor();
-  editor.focus();
+function switchFile(fn) {
+  if (!files[fn]) return;
+  files[activeFile].code = editor.value;
+  activeFile = fn;
+  editor.value = files[fn].code;
+  document.getElementById('fileTitle').textContent = fn;
+  document.getElementById('language').textContent = files[fn].lang;
+  renderExplorer(); renderTabs(); updateGutter(); updateCursor(); editor.focus();
 }
 
 function newFileDialog() {
-  let name = prompt('Enter new file name (e.g. about.html, script2.js):');
-  if (!name) return;
-  name = name.trim();
-  if (files[name]) {
-    toast('File already exists!');
-    return;
-  }
-  let lang = name.endsWith('.css') ? 'CSS' : name.endsWith('.js') ? 'JAVASCRIPT' : 'HTML';
-  files[name] = { name: name, lang: lang, code: '// New file: ' + name };
-  switchFile(name);
-  toast('Created ' + name);
+  let name = prompt('File name (e.g. style2.css, script.js):');
+  if (!name || files[name]) return;
+  files[name] = { name: name, lang: name.endsWith('.css') ? 'CSS' : name.endsWith('.js') ? 'JAVASCRIPT' : 'HTML', code: '// ' + name };
+  switchFile(name); toast('Created ' + name);
 }
 
-function closeFile(filename) {
-  if (Object.keys(files).length <= 1) {
-    toast('Cannot close last remaining file.');
-    return;
-  }
-  delete files[filename];
-  localStorage.removeItem(storageKey + filename);
-  if (activeFile === filename) {
-    activeFile = Object.keys(files)[0];
-  }
-  switchFile(activeFile);
-  toast('Closed ' + filename);
+function closeFile(fn) {
+  if (Object.keys(files).length <= 1) { toast('Cannot close last file.'); return; }
+  delete files[fn]; localStorage.removeItem(storageKey + fn);
+  if (activeFile === fn) activeFile = Object.keys(files)[0];
+  switchFile(activeFile); toast('Closed ' + fn);
 }
 
 function updateGutter() {
@@ -316,316 +215,97 @@ function updateGutter() {
 }
 
 function updateCursor() {
-  let pos = editor.selectionStart;
-  let textBefore = editor.value.slice(0, pos);
-  let lines = textBefore.split('\n');
-  document.getElementById('cursor').textContent = `Ln ${lines.length}, Col ${lines[lines.length - 1].length + 1}`;
+  let pos = editor.selectionStart, lines = editor.value.slice(0, pos).split('\n');
+  document.getElementById('cursor').textContent = `Ln ${lines.length}, Col ${lines[lines.length-1].length+1}`;
 }
 
 editor.addEventListener('input', () => {
   files[activeFile].code = editor.value;
-  files[activeFile].dirty = true;
   localStorage.setItem(storageKey + activeFile, editor.value);
-  updateGutter();
-  updateCursor();
-  renderExplorer();
-  status('Autosaved · ' + activeFile);
+  updateGutter(); updateCursor(); status('Autosaved');
 });
-
-editor.addEventListener('scroll', () => {
-  document.getElementById('gutter').scrollTop = editor.scrollTop;
-});
-
-editor.addEventListener('click', updateCursor);
-editor.addEventListener('keyup', updateCursor);
-
-editor.addEventListener('keydown', e => {
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    let start = editor.selectionStart, end = editor.selectionEnd;
-    editor.setRangeText('  ', start, end, 'end');
-    editor.dispatchEvent(new Event('input'));
-  }
-  if (e.key === 'Enter') {
-    let pos = editor.selectionStart;
-    let line = editor.value.slice(0, pos).split('\n').pop();
-    let indent = (line.match(/^\s*/) || [''])[0];
-    if (indent) {
-      e.preventDefault();
-      editor.setRangeText('\n' + indent, pos, editor.selectionEnd, 'end');
-      editor.dispatchEvent(new Event('input'));
-    }
-  }
-});
+editor.addEventListener('scroll', () => document.getElementById('gutter').scrollTop = editor.scrollTop);
+editor.addEventListener('click', updateCursor); editor.addEventListener('keyup', updateCursor);
 
 function runPreview() {
   files[activeFile].code = editor.value;
-  
-  // Assemble HTML with injected CSS and JS files
-  let html = files['index.html'] ? files['index.html'].code : '<!DOCTYPE html><html><body></body></html>';
-  
-  // Replace link tags or inject CSS
-  let cssContent = '';
+  let html = files['index.html'] ? files['index.html'].code : '';
+  let css = '', js = '';
   Object.keys(files).forEach(fn => {
-    if (fn.endsWith('.css')) {
-      cssContent += `<style>\n${files[fn].code}\n</style>\n`;
-    }
+    if (fn.endsWith('.css')) css += `<style>${files[fn].code}</style>`;
+    if (fn.endsWith('.js')) js += `<script>try{${files[fn].code}}catch(e){console.error(e)}<\/script>`;
   });
-  
-  // Collect JS files or script tags
-  let jsContent = '';
-  Object.keys(files).forEach(fn => {
-    if (fn.endsWith('.js')) {
-      jsContent += `<script>\ntry {\n${files[fn].code}\n} catch(err) { console.error(err); }\n<\/script>\n`;
-    }
-  });
-
-  // Inject console interception wrapper script for the iframe
-  let consoleInterceptor = `
-  <script>
-    (function() {
-      const wrapLog = (type) => {
-        const orig = console[type];
-        console[type] = function(...args) {
-          orig.apply(console, args);
-          try {
-            window.parent.postMessage({ type: 'console', level: type, text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ') }, '*');
-          } catch(e) {}
-        };
-      };
-      wrapLog('log'); wrapLog('error'); wrapLog('warn');
-      window.addEventListener('error', function(e) {
-        window.parent.postMessage({ type: 'console', level: 'error', text: e.message + ' (' + e.filename + ':' + e.lineno + ')' }, '*');
-      });
-    })();
-  <\/script>
-  `;
-
-  if (html.includes('</head>')) {
-    html = html.replace('</head>', consoleInterceptor + cssContent + '</head>');
-  } else {
-    html = consoleInterceptor + cssContent + html;
-  }
-
-  if (html.includes('</body>')) {
-    html = html.replace('</body>', jsContent + '</body>');
-  } else {
-    html += jsContent;
-  }
-
+  let intercept = `<script>(function(){const l=console.log;console.log=function(...a){l.apply(console,a);window.parent.postMessage({type:'console',text:a.join(' ')},'*');};})();<\/script>`;
+  html = intercept + css + html + js;
   document.getElementById('frame').srcdoc = html;
   status('Preview rendered');
-  logTerminal('Preview reloaded successfully.', 'log');
 }
 
-// Listen for console logs from iframe
 window.addEventListener('message', e => {
-  if (e.data && e.data.type === 'console') {
-    logTerminal(e.data.text, e.data.level);
-  }
+  if (e.data && e.data.type === 'console') logTerminal(e.data.text);
 });
 
 function saveAll() {
   files[activeFile].code = editor.value;
-  Object.keys(files).forEach(fn => {
-    localStorage.setItem(storageKey + fn, files[fn].code);
-    files[fn].dirty = false;
-  });
-  renderExplorer();
-  status('All files saved to local storage');
-  toast('All files saved successfully');
-  logTerminal('All workspace files saved.', 'log');
+  Object.keys(files).forEach(fn => localStorage.setItem(storageKey + fn, files[fn].code));
+  toast('All files saved');
 }
 
 function downloadProject() {
   saveAll();
   Object.keys(files).forEach(fn => {
-    let type = fn.endsWith('.css') ? 'text/css' : fn.endsWith('.js') ? 'text/javascript' : 'text/html';
-    let blob = new Blob([files[fn].code], { type: type });
-    let url = URL.createObjectURL(blob);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = fn;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    let blob = new Blob([files[fn].code], {type: 'text/plain'});
+    let url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = fn; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
-  toast('Project files downloaded');
-  logTerminal('Exported all project files.', 'log');
+  toast('Project exported');
 }
 
 function importFiles(list) {
-  [...list].forEach(file => {
-    let reader = new FileReader();
-    reader.onload = e => {
-      let content = String(e.target.result);
-      files[file.name] = {
-        name: file.name,
-        lang: file.name.endsWith('.css') ? 'CSS' : file.name.endsWith('.js') ? 'JAVASCRIPT' : 'HTML',
-        code: content
-      };
-      localStorage.setItem(storageKey + file.name, content);
-      switchFile(file.name);
-      toast(file.name + ' imported');
-      logTerminal('Imported file: ' + file.name, 'log');
+  [...list].forEach(f => {
+    let r = new FileReader();
+    r.onload = e => {
+      files[f.name] = { name: f.name, lang: f.name.endsWith('.css') ? 'CSS' : 'HTML', code: String(e.target.result) };
+      localStorage.setItem(storageKey + f.name, files[f.name].code);
+      switchFile(f.name); toast(f.name + ' imported');
     };
-    reader.readAsText(file);
+    r.readAsText(f);
   });
 }
 
-function toggleEditorFull() { document.body.classList.remove('preview-full'); document.body.classList.toggle('editor-full'); }
-function togglePreviewFull() { document.body.classList.remove('editor-full'); document.body.classList.toggle('preview-full'); }
+function toggleEditorFull() { document.body.classList.toggle('editor-full'); document.body.classList.remove('preview-full'); }
+function togglePreviewFull() { document.body.classList.toggle('preview-full'); document.body.classList.remove('editor-full'); }
 function toggleTerminal() { document.getElementById('terminal').classList.toggle('open'); }
-function toggleExplorer() {
-  let exp = document.getElementById('explorer');
-  exp.style.display = exp.style.display === 'none' ? 'flex' : 'none';
-}
-
-function toggleTheme() {
-  document.body.classList.toggle('light');
-  if (document.body.classList.contains('light')) {
-    document.documentElement.style.setProperty('--bg', '#edf2f8');
-    document.documentElement.style.setProperty('--panel', '#f7f9fc');
-    document.documentElement.style.setProperty('--editor', '#f8fafc');
-    document.documentElement.style.setProperty('--text', '#182337');
-  } else {
-    location.reload();
-  }
-}
-
-function changeFont() {
-  editor.style.fontSize = document.getElementById('fontSize').value + 'px';
-}
-
-function status(msg) {
-  document.getElementById('statusMsg').textContent = '● ' + msg;
-}
-
-function logTerminal(text, type = 'log') {
-  let tb = document.getElementById('terminalBody');
-  let d = document.createElement('div');
-  if (type === 'error') d.className = 'error';
-  else if (type === 'warn') d.className = 'warn';
-  d.textContent = '› ' + text;
-  tb.appendChild(d);
-  tb.scrollTop = tb.scrollHeight;
-}
-
-function clearTerminal() {
-  document.getElementById('terminalBody').innerHTML = '';
-}
-
-function openPreviewTab() {
-  let w = window.open();
-  if (w) {
-    w.document.open();
-    w.document.write(document.getElementById('frame').srcdoc);
-    w.document.close();
-  }
-}
-
+function toggleExplorer() { let e = document.getElementById('explorer'); e.style.display = e.style.display === 'none' ? 'flex' : 'none'; }
+function toggleTheme() { document.body.classList.toggle('light'); toast('Theme toggled'); }
+function changeFont() { editor.style.fontSize = document.getElementById('fontSize').value + 'px'; }
+function status(t) { document.getElementById('statusMsg').textContent = '● ' + t; }
+function logTerminal(t) { let b = document.getElementById('terminalBody'); b.innerHTML += `<div>› ${t}</div>`; b.scrollTop = b.scrollHeight; }
+function clearTerminal() { document.getElementById('terminalBody').innerHTML = ''; }
+function openPreviewTab() { let w = window.open(); if(w){ w.document.write(document.getElementById('frame').srcdoc); w.document.close(); } }
 function formatCode() {
   let v = editor.value;
-  if (activeFile.endsWith('.html')) v = v.replace(/>\s*</g, '>\n<');
-  else if (activeFile.endsWith('.css')) v = v.replace(/\s*\{\s*/g, ' {\n  ').replace(/;\s*/g, ';\n  ').replace(/\s*\}\s*/g, '\n}\n');
-  else if (activeFile.endsWith('.js')) v = v.replace(/;\s*/g, ';\n').replace(/\{\s*/g, '{\n  ').replace(/\s*\}/g, '\n}');
-  editor.value = v.trim();
-  editor.dispatchEvent(new Event('input'));
-  toast('Code formatted');
+  if(activeFile.endsWith('.html')) v = v.replace(/>\s*</g,'>\n<');
+  editor.value = v.trim(); editor.dispatchEvent(new Event('input')); toast('Formatted');
 }
-
-function insertSnippet(type) {
-  let snippets = {
-    html5: '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Title</title>\n</head>\n<body>\n\n</body>\n</html>',
-    section: '<section class="card">\n  <h2>Card Title</h2>\n  <p>Content goes here.</p>\n</section>',
-    flex: 'display: flex;\njustify-content: center;\nalign-items: center;\ngap: 1rem;',
-    grid: 'display: grid;\ngrid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\ngap: 1rem;',
-    fetch: "fetch('https://api.example.com/data')\n  .then(res => res.json())\n  .then(data => console.log(data))\n  .catch(err => console.error(err));",
-    event: "document.querySelector('#btn')?.addEventListener('click', () => {\n  console.log('Clicked');\n});"
-  };
-  let start = editor.selectionStart, end = editor.selectionEnd;
-  editor.setRangeText(snippets[type] || '', start, end, 'end');
-  editor.dispatchEvent(new Event('input'));
-  closeModal('snippets');
-  toast('Snippet inserted');
-}
-
-function searchCode() {
-  let q = prompt('Search text in active file:');
-  if (!q) return;
-  let i = editor.value.toLowerCase().indexOf(q.toLowerCase());
-  if (i < 0) {
-    toast('Not found');
-    return;
-  }
-  editor.focus();
-  editor.setSelectionRange(i, i + q.length);
-  toast('Found match');
-}
-
+function clearStorage() { if(confirm('Clear all stored files?')) { localStorage.clear(); location.reload(); } }
+function copyShareLink() { navigator.clipboard.writeText(window.location.href); toast('Link copied to clipboard!'); }
 function openModal(id) { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('show'); }));
+function toast(t) { let e = document.getElementById('toast'); e.textContent = t; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 1600); }
 
-document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => {
-  if (e.target === m) m.classList.remove('show');
-}));
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal.show').forEach(m => m.classList.remove('show'));
-  }
-  if (e.ctrlKey && e.key === 'Enter') {
-    e.preventDefault();
-    runPreview();
-  }
-  if (e.ctrlKey && e.key.toLowerCase() === 's') {
-    e.preventDefault();
-    saveAll();
-  }
-  if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'e') {
-    e.preventDefault();
-    toggleEditorFull();
-  }
-  if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'o') {
-    e.preventDefault();
-    togglePreviewFull();
-  }
-  if (e.ctrlKey && e.key === '`') {
-    e.preventDefault();
-    toggleTerminal();
-  }
-});
-
-// Drag to resize split panes
 (() => {
-  const split = document.getElementById('splitter'), panes = document.getElementById('panes'), ed = document.getElementById('editorPane'), pv = document.getElementById('previewPane');
-  let moving = false;
-  function start(e) { moving = true; split.classList.add('dragging'); e.preventDefault(); }
-  function move(e) {
-    if (!moving) return;
-    let r = panes.getBoundingClientRect(), x = e.touches ? e.touches[0].clientX : e.clientX;
-    let pct = Math.max(25, Math.min(80, (x - r.left) / r.width * 100));
-    ed.style.flex = 'none';
-    ed.style.width = pct + '%';
-    pv.style.flex = '1';
-  }
-  function end() { moving = false; split.classList.remove('dragging'); }
-  split.addEventListener('mousedown', start);
-  window.addEventListener('mousemove', move);
-  window.addEventListener('mouseup', end);
-  split.addEventListener('touchstart', start, {passive: false});
-  window.addEventListener('touchmove', move, {passive: false});
-  window.addEventListener('touchend', end);
+  let split = document.getElementById('splitter'), panes = document.getElementById('panes'), ed = document.getElementById('editorPane'), pv = document.getElementById('previewPane'), moving = false;
+  split.addEventListener('mousedown', () => moving = true);
+  window.addEventListener('mousemove', e => {
+    if(!moving) return;
+    let r = panes.getBoundingClientRect(), pct = Math.max(25, Math.min(80, (e.clientX - r.left) / r.width * 100));
+    ed.style.flex = 'none'; ed.style.width = pct + '%'; pv.style.flex = '1';
+  });
+  window.addEventListener('mouseup', () => moving = false);
 })();
 
-function toast(t) {
-  let e = document.getElementById('toast');
-  e.textContent = t;
-  e.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => e.classList.remove('show'), 1800);
-}
-
-// Initialize on load
 initIDE();
 </script>
 </body>
