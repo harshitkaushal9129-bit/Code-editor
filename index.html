@@ -1,130 +1,539 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090d18">
-<title>Dragon IDE — Legendary Web Forge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevStudio Pro - Advanced Web Editor</title>
+<meta name="theme-color" content="#007acc">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="Kaushalji.png">
+<!-- QRCode Generator Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-:root{--bg:#080d18;--panel:#101827;--panel2:#131f31;--panel3:#1b2b42;--line:#293a55;--text:#e7eefb;--muted:#8fa2bf;--blue:#55a8ff;--cyan:#51e0d1;--gold:#f5bd62;--red:#ff6879;--green:#54d69a;--editor:#0b1220;--shadow:0 18px 55px #0008}
-*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--text);font:13px/1.45 Inter,Segoe UI,system-ui,sans-serif;overflow:hidden}button,input,select{font:inherit}button{cursor:pointer;color:inherit}.app{height:100dvh;display:flex;flex-direction:column;min-height:0;background:radial-gradient(ellipse at 75% -25%,#19365a55,transparent 45%),var(--bg)}
-.top{height:52px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#0b1322;border-bottom:1px solid var(--line);gap:10px}.brand{display:flex;align-items:center;gap:10px;min-width:180px}.dragon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#f4b85b,#a94724 55%,#54213a);box-shadow:0 0 22px #ec8b3b55;font-size:21px}.brandname{font-size:15px;font-weight:900;letter-spacing:.6px}.brandname span{color:var(--gold)}.brand small{display:block;color:#8397b5;font-size:9px;letter-spacing:2px;font-weight:700}.topright{display:flex;gap:7px;align-items:center}.btn{border:1px solid var(--line);background:#17253a;padding:7px 11px;border-radius:7px;font-size:11px;font-weight:750;white-space:nowrap;transition:.15s}.btn:hover{border-color:#6286b4;background:#203653;transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,#1679d5,#2456b7);border-color:#418fe2;color:#fff}.btn.run{background:linear-gradient(135deg,#168b65,#1c6f83);border-color:#34b68b;color:white}.btn.gold{background:linear-gradient(135deg,#a95a24,#80521c);border-color:#c98c42;color:#fff}.btn.flat{background:transparent}.btn.danger{color:#ff9ca5}.btn.tiny{padding:5px 8px}
-.menu{height:32px;flex:none;display:flex;align-items:center;gap:2px;padding:0 12px;background:#0e1828;border-bottom:1px solid var(--line);overflow:auto}.menu button{border:0;background:transparent;color:var(--muted);padding:6px 10px;border-radius:5px;font-size:11px;white-space:nowrap}.menu button:hover{background:var(--panel3);color:#fff}
-.toolbar{height:auto;min-height:42px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px;background:#111c2d;border-bottom:1px solid var(--line)}.group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.crumb{font-size:11px;color:#8094b2}.crumb b{color:#e5edf9}.select{background:#1a2940;border:1px solid var(--line);color:#dce7f7;border-radius:6px;padding:6px 8px;font-size:11px}
-.main{display:flex;flex:1;min-height:0;min-width:0}.activity{width:47px;flex:none;background:#0b1423;border-right:1px solid var(--line);display:flex;align-items:center;flex-direction:column;padding:9px 5px;gap:8px}.activity button{width:36px;height:36px;border:0;background:transparent;border-radius:8px;color:#90a3bf;font-size:17px}.activity button:hover,.activity button.active{background:#1d3451;color:white}.activity .bottom{margin-top:auto}
-.explorer{width:195px;min-width:145px;flex:none;background:#101a2a;border-right:1px solid var(--line);display:flex;flex-direction:column}.sidehead{height:38px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#a7b8d1;font-size:10px;font-weight:900;letter-spacing:1.5px}.tree{padding:3px 8px;overflow:auto}.treecap{padding:7px;color:#8397b5;font-size:10px;font-weight:900;letter-spacing:1px}.file{width:100%;border:0;background:transparent;color:#b9c9de;padding:8px;border-radius:6px;text-align:left;display:flex;align-items:center;gap:8px;font-size:11px}.file:hover{background:#1a2b42}.file.active{background:#203b5d;color:#fff}.file .dirty{margin-left:auto;color:var(--gold);display:none}.file.changed .dirty{display:block}.projectcard{margin:auto 9px 10px;padding:10px;border:1px solid #30415d;border-radius:9px;background:linear-gradient(145deg,#192c45,#131e30);font-size:10px;color:#9db0cb;line-height:1.6}.projectcard b{color:var(--gold)}
-.work{display:flex;flex:1;min-width:0;min-height:0;flex-direction:column}.tabs{height:38px;flex:none;display:flex;background:#101a2a;border-bottom:1px solid var(--line);overflow:auto}.tab{border:0;border-right:1px solid var(--line);background:#142034;color:#92a5c1;padding:0 13px;min-width:110px;display:flex;align-items:center;gap:8px;font-size:11px}.tab.active{background:var(--editor);color:#fff;border-top:2px solid var(--gold)}.tab .x{margin-left:auto;color:#7186a4}.tab.active .x{color:#c7d4e8}
-.panes{display:flex;flex:1;min-height:0;min-width:0;position:relative}.editorpane{display:flex;flex:1;min-width:0;min-height:0;flex-direction:column;background:var(--editor)}.panehead{height:34px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:#0e1929;border-bottom:1px solid #22334c;color:#9fb1ca;font-size:10px}.panehead strong{color:#dce8f8;font-size:11px}.editorbody{display:flex;flex:1;min-height:0;overflow:hidden;position:relative}.gutter{width:43px;flex:none;background:#0a111e;color:#586d8a;text-align:right;padding:12px 9px 12px 0;overflow:hidden;white-space:pre;font:12px/1.65 ui-monospace,Consolas,monospace;user-select:none}.code{flex:1;min-width:0;min-height:0;resize:none;border:0;outline:0;background:var(--editor);color:#dce8f8;padding:12px 15px;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;overflow:auto;tab-size:2;caret-color:#ffd27b}.code::selection{background:#31577f}.minimap{width:45px;flex:none;border-left:1px solid #1c2a3e;background:repeating-linear-gradient(180deg,#1e3b5c 0 2px,transparent 2px 5px);opacity:.28}
-.splitter{width:5px;flex:none;background:#17263a;cursor:col-resize;position:relative}.splitter:hover,.splitter.dragging{background:var(--gold)}
-.preview{width:43%;min-width:230px;max-width:70%;display:flex;flex-direction:column;background:#fff}.previewhead{height:34px;flex:none;background:#eaf0f8;color:#263b56;display:flex;align-items:center;justify-content:space-between;padding:0 9px;font-size:10px;font-weight:900}.previewhead button{border:0;background:transparent;color:#39506f;padding:4px 7px;border-radius:4px}.previewhead button:hover{background:#d8e3f0}.frame{flex:1;width:100%;border:0;background:white}
-.terminal{height:145px;flex:none;display:none;flex-direction:column;background:#080f1c;border-top:1px solid var(--line)}.terminal.open{display:flex}.terminalhead{height:30px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 11px;color:#9fb1ca;font-size:10px;border-bottom:1px solid var(--line)}.terminalbody{overflow:auto;padding:7px 11px;color:#8fe1b9;font:11px/1.65 ui-monospace,monospace}.terminalbody .error{color:#ff8994}.terminalbody .warn{color:#ffd18c}
-.status{height:23px;flex:none;background:#174f86;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:9px}.status span{margin-right:12px}
-.modal{position:fixed;inset:0;background:#020712d9;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}.modal.show{display:flex}.dialog{width:min(560px,100%);max-height:90dvh;overflow:auto;background:#111c2d;border:1px solid #3a4d69;border-radius:15px;padding:21px;box-shadow:var(--shadow)}.dialog h2{font-size:18px;margin:0 0 8px}.dialog p{color:#a6b7ce;line-height:1.7;font-size:12px}.close{float:right}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}.infocard{background:#1a2a40;border:1px solid #30445f;border-radius:9px;padding:11px}.infocard b{display:block;color:var(--gold);font-size:10px;margin-bottom:4px}.infocard span{color:#d6e1ef;font-size:11px}.profile{display:flex;gap:13px;align-items:center;background:#1a2b43;border:1px solid #314967;border-radius:11px;padding:13px;margin:13px 0}.avatar{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}.profile h3{margin:0 0 3px}.profile small{color:#a5b8d1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.toast{position:fixed;bottom:35px;left:50%;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#203652;border:1px solid #52769e;padding:9px 14px;border-radius:8px;font-size:11px;z-index:90;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
-/* Fullscreen states */
-body.editor-full .activity,body.editor-full .explorer,body.editor-full .toolbar,body.editor-full .menu,body.editor-full .top,body.editor-full .status,body.editor-full .preview,body.editor-full .splitter,body.editor-full .tabs{display:none!important}
-body.editor-full .main,body.editor-full .work,body.editor-full .panes,body.editor-full .editorpane{width:100%;height:100%;flex:1}
-body.preview-full .activity,body.preview-full .explorer,body.preview-full .toolbar,body.preview-full .menu,body.preview-full .top,body.preview-full .status,body.preview-full .editorpane,body.preview-full .splitter,body.preview-full .tabs{display:none!important}
-body.preview-full .main,body.preview-full .work,body.preview-full .panes,body.preview-full .preview{width:100%;height:100%;max-width:none;flex:1}
-body.preview-full .previewhead{height:42px}
-@media(max-width:760px){.top{height:46px;padding:0 8px}.brand{min-width:140px}.brand small{display:none}.topright .wide{display:none}.explorer{display:none}.activity{width:40px}.toolbar{align-items:flex-start}.preview{width:42%;min-width:185px}.btn{padding:6px 8px;font-size:10px}}
-@media(max-width:570px){.panes{flex-direction:column}.editorpane{flex:1;min-height:42%}.splitter{width:100%;height:5px;cursor:row-resize}.preview{width:100%;max-width:none;min-width:0;height:42%;min-height:140px}.toolbar{min-height:38px}.crumb{display:none}.tab{min-width:92px;padding:0 8px}.minimap{display:none}.status .right{display:none}}
+:root { --primary: #007acc; --bg: #0f0f0f; --panel: #1a1a1a; --border: #333; --text-color: #9cdcfe; --editor-bg: #1e1e1e; --accent: #f7df1e; --share-color: #6a1b9a; }
+body.light-mode { --bg: #ffffff; --panel: #f3f3f3; --border: #ccc; --text-color: #000000; --editor-bg: #ffffff; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.3s; }
+.top-nav { background: var(--panel); padding: 5px 15px; display: flex; gap: 20px; border-bottom: 1px solid var(--border); font-size: 13px; align-items: center; overflow-x: auto; z-index: 10; }
+.menu-item { cursor: pointer; color: #888; transition: 0.2s; white-space: nowrap; }
+.menu-item:hover { color: var(--primary); }
+header { background: #1e1e1e; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); flex-wrap: wrap; gap: 10px; z-index: 10; }
+.logo-section { display: flex; align-items: center; gap: 10px; }
+.logo-img { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; }
+.logo-text { font-size: 18px; font-weight: bold; color: var(--primary); }
+.tools-bar { background: #252526; padding: 8px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; z-index: 10; }
+.tool-select, .tool-btn { background: #333; color: white; border: 1px solid #444; padding: 4px 10px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+#file-input, #folder-input { display: none; }
+.quick-tags { background: #2d2d2d; padding: 6px 15px; display: flex; gap: 10px; overflow-x: auto; border-bottom: 1px solid var(--border); align-items: center; z-index: 10; }
+.tag-pill { background: #3a3a3a; color: #ddd; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 500; cursor: pointer; white-space: nowrap; border: 1px solid #444; transition: 0.2s; }
+.tag-pill:hover { background: var(--primary); border-color: var(--primary); color: white; }
+.main-layout { display: flex; flex: 1; overflow: hidden; position: relative; flex-direction: column; }
+.workspace-content { display: flex; flex: 1; overflow: hidden; position: relative; width: 100%; height: 100%; }
+.sidebar { width: 50px; background: #181818; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 15px; gap: 20px; z-index: 10; }
+.sidebar-icon { font-size: 20px; color: #858585; cursor: pointer; transition: 0.3s; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+.sidebar-icon:hover { color: white; background: #2a2a2a; transform: scale(1.05); }
+.editor-tabs { display: flex; background: #2d2d2d; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tab { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #999; border-right: 1px solid var(--border); white-space: nowrap; display: flex; align-items: center; }
+.tab.active { background: var(--editor-bg); color: white; border-top: 2px solid var(--primary); }
+.tab .close-icon { margin-left: 10px; color: #ff5f56; font-weight: bold; cursor: pointer; }
+.workspace { display: flex; flex: 1; overflow: hidden; width: 100%; height: 100%; position: relative; }
+@media (max-width: 768px) { .workspace { flex-direction: column; } }
+.editor-panels { width: 60%; display: flex; flex-direction: column; border-right: 2px solid var(--border); background: var(--editor-bg); height: 100%; transition: 0.2s; }
+@media (max-width: 768px) { .editor-panels { width: 100%; height: 50%; } }
+.editor-panels.fullscreen { width: 100% !important; position: absolute !important; top: 0; left: 0; height: 100% !important; z-index: 100; }
+.panel { display: none; flex-direction: column; height: 100%; }
+.panel.active { display: flex; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background: rgba(0,0,0,0.05); }
+textarea { width: 100%; flex: 1; background: var(--editor-bg); color: var(--text-color); border: none; padding: 15px; font-family: 'Consolas', monospace; outline: none; font-size: 14px; line-height: 1.6; resize: none; tab-size: 4; white-space: pre; }
+textarea.nowrap { white-space: nowrap; overflow-x: auto; }
+.preview-area { width: 40%; background: white; position: relative; height: 100%; transition: 0.2s; display: flex; flex-direction: column; }
+@media (max-width: 768px) { .preview-area { width: 100%; height: 50%; } }
+.preview-area.fullscreen { width: 100% !important; position: absolute !important; top: 0; left: 0; height: 100% !important; z-index: 100; }
+iframe { width: 100%; flex: 1; border: none; }
+/* Console Panel */
+.console-panel { background: #181818; border-top: 1px solid var(--border); height: 120px; display: none; flex-direction: column; font-family: monospace; font-size: 12px; position: absolute; bottom: 0; left: 0; right: 0; z-index: 50; }
+.console-header { background: #252526; padding: 4px 10px; display: flex; justify-content: space-between; align-items: center; color: #ccc; border-bottom: 1px solid var(--border); }
+.console-body { flex: 1; overflow-y: auto; padding: 5px 10px; color: #4ec9b0; }
+.btn { padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+.run-btn { background: #4caf50; color: white; }
+.share-btn { background: var(--share-color); color: white; }
+footer { background: var(--primary); color: white; padding: 4px 12px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+.search-box { background: #333; border: 1px solid #555; color: white; padding: 2px 8px; border-radius: 4px; outline: none; font-size: 12px; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px); overflow-y: auto; }
+.modal-content { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; max-height: 90vh; overflow-y: auto; margin: auto; }
+.shortcut-list { text-align: left; margin-top: 15px; max-height: 250px; overflow-y: auto; }
+.shortcut-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
+.kbd { background: #333; padding: 2px 6px; border-radius: 4px; color: var(--accent); font-family: monospace; border-bottom: 2px solid #000; }
+.dev-card { background: #252526; border-radius: 10px; padding: 20px; margin-top: 15px; border: 1px solid #333; }
+.dev-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 10px; }
+.dev-name { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; }
+.dev-info { color: #aaa; font-size: 13px; margin-bottom: 15px; }
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; text-align: left; }
+.feature-item { font-size: 11px; background: #2d2d2d; padding: 5px 8px; border-radius: 4px; color: #ddd; border-left: 2px solid var(--primary); }
+.qr-container { background: white; padding: 10px; border-radius: 8px; display: inline-block; margin: 15px 0 10px 0; }
+.qr-container img { display: block; margin: 0 auto; }
+.upi-text { font-size: 11px; color: var(--accent); word-break: break-all; margin-top: 5px; }
+.support-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+.support-link { text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; border-radius: 6px; font-weight: bold; transition: 0.2s; font-size: 14px; }
+.whatsapp-btn { background: #25d366; color: white; }
+.call-btn { background: #007acc; color: white; }
+.close-btn { margin-top: 20px; width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer; }
 </style>
 </head>
 <body>
-<div class="app">
-<header class="top">
- <div class="brand"><div class="dragon">🐉</div><div class="brandname">DRAGON <span>IDE</span><small>LEGENDARY WEB FORGE · v3.0</small></div></div>
- <div class="topright">
-  <button class="btn flat wide" onclick="openModal('appInfo')">ⓘ About</button>
-  <button class="btn flat wide" onclick="openModal('developerInfo')">♙ Developer</button>
-  <button class="btn" onclick="toggleTheme()">◐ Theme</button>
-  <button class="btn gold" onclick="openModal('command')">⌘ Command</button>
-  <button class="btn run" onclick="runPreview()">▶ Run</button>
- </div>
-</header>
-<nav class="menu">
- <button onclick="document.getElementById('filesInput').click()">File</button><button onclick="saveAll()">Save All</button><button onclick="runPreview()">Run Project</button><button onclick="toggleTerminal()">Terminal</button><button onclick="openModal('snippets')">Snippets</button><button onclick="openModal('shortcuts')">Shortcuts</button><button onclick="formatCode()">Format Code</button><button onclick="openModal('appInfo')">Help / About</button>
-</nav>
-<section class="toolbar">
- <div class="group"><span class="crumb">WORKSPACE / <b>dragon-project</b></span><button class="btn tiny" onclick="document.getElementById('filesInput').click()">＋ Import Files</button><button class="btn tiny" onclick="document.getElementById('folderInput').click()">▣ Import Folder</button><select class="select" id="fontSize" onchange="changeFont()"><option value="12">12 px</option><option value="13" selected>13 px</option><option value="14">14 px</option><option value="16">16 px</option></select></div>
- <div class="group"><button class="btn tiny" onclick="toggleEditorFull()">⛶ Code Fullscreen</button><button class="btn tiny" onclick="togglePreviewFull()">◱ Output Fullscreen</button><button class="btn tiny" onclick="toggleTerminal()">▤ Console</button><button class="btn tiny primary" onclick="downloadProject()">⇩ Export</button></div>
-</section>
-<input id="filesInput" type="file" multiple hidden accept=".html,.htm,.css,.js,.json,.txt" onchange="importFiles(this.files)">
-<input id="folderInput" type="file" webkitdirectory multiple hidden onchange="importFiles(this.files)">
-<main class="main">
- <aside class="activity">
-  <button class="active" title="Explorer" onclick="toggleExplorer()">▤</button><button title="Snippets" onclick="openModal('snippets')">⚡</button><button title="Search in current file" onclick="searchCode()">⌕</button><button title="Terminal" onclick="toggleTerminal()">▣</button>
-  <button class="bottom" title="Developer profile" onclick="openModal('developerInfo')">♙</button>
- </aside>
- <aside class="explorer" id="explorer"><div class="sidehead"><span>EXPLORER</span><span>•••</span></div><div class="tree"><div class="treecap">⌄ DRAGON-PROJECT</div>
-  <button class="file active" data-file="html" onclick="switchFile('html')">🌐 index.html <span class="dirty">●</span></button>
-  <button class="file" data-file="css" onclick="switchFile('css')">🎨 style.css <span class="dirty">●</span></button>
-  <button class="file" data-file="js" onclick="switchFile('js')">🟨 script.js <span class="dirty">●</span></button>
- </div><div class="projectcard"><b>🐉 DRAGON CORE</b><br>Autosave enabled<br>Local workspace · UTF-8<br>Craft boldly. Build legendary.</div></aside>
- <section class="work">
-  <div class="tabs"><button class="tab active" id="tab-html" onclick="switchFile('html')">🌐 index.html <span class="x">×</span></button><button class="tab" id="tab-css" onclick="switchFile('css')">🎨 style.css <span class="x">×</span></button><button class="tab" id="tab-js" onclick="switchFile('js')">🟨 script.js <span class="x">×</span></button></div>
-  <div class="panes" id="panes">
-   <section class="editorpane" id="editorPane"><div class="panehead"><strong id="fileTitle">index.html</strong><span>UTF-8 · Spaces: 2 · <span id="language">HTML</span></span></div>
-    <div class="editorbody"><div class="gutter" id="gutter">1</div><textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Source code editor"></textarea><div class="minimap" title="Code overview"></div></div>
-   </section>
-   <div class="splitter" id="splitter" title="Drag to resize editor and preview"></div>
-   <section class="preview" id="previewPane"><div class="previewhead"><span>◉ LIVE OUTPUT</span><div><button onclick="runPreview()" title="Refresh preview">↻ Refresh</button><button onclick="openPreviewTab()" title="Open in new tab">↗</button></div></div><iframe class="frame" id="frame" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe></section>
-  </div>
-  <section class="terminal" id="terminal"><div class="terminalhead"><span>TERMINAL&nbsp; · &nbsp;OUTPUT</span><button class="btn tiny" onclick="clearTerminal()">Clear</button></div><div class="terminalbody" id="terminalBody">Dragon IDE terminal initialized. Ready to forge.</div></section>
- </section>
-</main>
-<footer class="status"><div><span id="statusMsg">● Ready</span><span id="cursor">Ln 1, Col 1</span></div><div class="right"><span>HTML · CSS · JS</span><span>DRAGON IDE v3.0</span><span>UTF-8</span></div></footer>
+<div class="top-nav">
+<div class="menu-item" onclick="document.getElementById('file-input').click()">📁 Open File</div>
+<div class="menu-item" onclick="document.getElementById('folder-input').click()">📂 Import Folder</div>
+<div class="menu-item" onclick="minifyCode()">⚡ Minify Code</div>
+<div class="menu-item" onclick="toggleConsole()">🖥️ Console Log</div>
+<div class="menu-item" onclick="shareProject()">📤 Share Project</div>
+<div class="menu-item" onclick="showModal('shortcutModal')">⌨️ Shortcuts</div>
+<div class="menu-item" onclick="clearAll()">Clear All</div>
+<div class="menu-item" onclick="showModal('helpModal')">Help</div>
+<div class="menu-item" onclick="showModal('devModal')" style="color: var(--accent);">👑 Developer Pro</div>
 </div>
-<div class="toast" id="toast"></div>
+<header>
+<div class="logo-section">
+<img src="Kaushalji.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1005/1005141.png'">
+<div class="logo-text">DevStudio Pro</div>
+</div>
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+<input type="text" class="search-box" placeholder="Search code..." oninput="searchInEditor(this.value)">
+<button id="installBtn" class="btn" style="background:#4caf50; display:none;">📥 Install</button>
+<button class="btn" style="background:#333;" onclick="toggleWrap()" title="Toggle Word Wrap">🔄 Wrap</button>
+<button class="btn" style="background:#333;" onclick="toggleEditorFS()" title="Toggle Code Fullscreen">💻 Code FS</button>
+<button class="btn" style="background:#333;" onclick="togglePreviewFS()" title="Toggle Preview Fullscreen">👁️ Preview FS</button>
+<button class="btn share-btn" onclick="shareProject()">📤 Share</button>
+<button class="btn run-btn" onclick="runPreview()">▶ Run</button>
+</div>
+</header>
+<div class="tools-bar">
+<div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+<input type="file" id="file-input" onchange="openLocalFile(event)" multiple>
+<input type="file" id="folder-input" webkitdirectory directory multiple onchange="openFolder(event)">
+<select class="tool-select" id="font-size" onchange="updateStyle()">
+<option value="14px">14px</option>
+<option value="16px">16px</option>
+<option value="18px">18px</option>
+<option value="20px">20px</option>
+</select>
+<select class="tool-select" id="font-family" onchange="updateStyle()">
+<option value="'Consolas', monospace">Consolas</option>
+<option value="system-ui">System UI</option>
+<option value="'Courier New'">Courier New</option>
+</select>
+<button class="tool-btn" onclick="toggleTheme()">🌓 Change Theme</button>
+</div>
+</div>
+<div class="quick-tags" id="tags-bar">
+<div class="tag-pill" onclick="insertTag('&lt;div&gt;', '&lt;/div&gt;')">&lt;div&gt;</div>
+<div class="tag-pill" onclick="insertTag('&lt;span&gt;', '&lt;/span&gt;')">&lt;span&gt;</div>
+<div class="tag-pill" onclick="insertTag('&lt;button&gt;', '&lt;/button&gt;')">&lt;button&gt;</div>
+<div class="tag-pill" onclick="insertTag('&lt;input type=\'text\'&gt;', '')">&lt;input&gt;</div>
+<div class="tag-pill" onclick="insertTag('&lt;h1&gt;', '&lt;/h1&gt;')">&lt;h1&gt;</div>
+<div class="tag-pill" onclick="insertTag('&lt;p&gt;', '&lt;/p&gt;')">&lt;p&gt;</div>
+<div class="tag-pill" onclick="insertTag('&lt;a href=\'#\'&gt;', '&lt;/a&gt;')">&lt;a&gt;</div>
+</div>
+<div class="main-layout">
+<div class="workspace-content">
+<div class="sidebar">
+<div class="sidebar-icon" onclick="document.getElementById('file-input').click()" title="Open File">📂</div>
+<div class="sidebar-icon" onclick="document.getElementById('folder-input').click()" title="Import Folder">📁</div>
+<div class="sidebar-icon" onclick="shareProject()" title="Share">📤</div>
+<div class="sidebar-icon" onclick="showModal('shortcutModal')" title="Keyboard Shortcuts">⌨️</div>
+<div class="sidebar-icon" onclick="showModal('templateModal')" title="Code Templates" style="color: var(--accent);">⚡</div>
+<div style="flex: 1;"></div>
+<div class="sidebar-icon" onclick="showModal('devModal')" title="Settings / Developer">⚙️</div>
+</div>
+<div class="workspace">
+<div class="editor-panels">
+<div class="editor-tabs" id="tabs-container">
+<div class="tab active" id="tab-html" onclick="switchTab('html')">index.html</div>
+<div class="tab" id="tab-css" onclick="switchTab('css')">style.css</div>
+<div class="tab" id="tab-js" onclick="switchTab('js')">script.js</div>
+</div>
+<div id="panels-container" style="flex:1; display:flex; flex-direction:column;">
+<div id="panel-html" class="panel active">
+<div class="panel-header"><label>HTML</label><button class="btn" style="background:#e34f26;color:white" onclick="saveFile('html')">Save</button></div>
+<textarea id="html-code" oninput="handleInput('html')" onkeyup="updateCursor(this)" onclick="updateCursor(this)" placeholder="<html>...</html>"></textarea>
+</div>
+<div id="panel-css" class="panel">
+<div class="panel-header"><label>CSS</label><button class="btn" style="background:#007acc;color:white" onclick="saveFile('css')">Save</button></div>
+<textarea id="css-code" oninput="handleInput('css')" onkeyup="updateCursor(this)" onclick="updateCursor(this)" placeholder="body { background: #000; }"></textarea>
+</div>
+<div id="panel-js" class="panel">
+<div class="panel-header"><label>JS</label><button class="btn" style="background:#f7df1e;color:black" onclick="saveFile('js')">Save</button></div>
+<textarea id="js-code" oninput="handleInput('js')" onkeyup="updateCursor(this)" onclick="updateCursor(this)" placeholder="console.log('Hello World');"></textarea>
+</div>
+</div>
+</div>
+<div class="preview-area">
+<iframe id="output"></iframe>
+<div id="console-drawer" class="console-panel">
+<div class="console-header"><span>Console Output</span><span style="cursor:pointer;" onclick="clearConsole()">Clear ✖</span></div>
+<div id="console-logs" class="console-body"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer>
+<div style="display:flex; gap:15px; align-items:center;">
+<span id="theme-status">● Mode: Dark | UTF-8</span>
+<span id="cursor-pos">Ln 1, Col 1</span>
+</div>
+<div>Designed by Kaushalji • v1.2.1</div>
+</footer>
 
-<div class="modal" id="appInfo"><div class="dialog"><button class="btn close" onclick="closeModal('appInfo')">✕</button><h2>🐉 Dragon IDE — Legendary Web Forge</h2><p>A browser-based mini IDE designed for focused HTML, CSS and JavaScript development. Build, preview, save and export your projects in one workspace.</p><div class="grid">
-<div class="infocard"><b>EDITOR STUDIO</b><span>Separate files, line numbers, indentation and tabs.</span></div><div class="infocard"><b>LIVE PREVIEW</b><span>Instant output with refresh and new-tab preview.</span></div><div class="infocard"><b>FLEX WORKSPACE</b><span>Resize editor/output and maximize either side.</span></div><div class="infocard"><b>PROJECT TOOLS</b><span>Import files, import folders and export source.</span></div><div class="infocard"><b>DRAGON COMMAND</b><span>Quick actions, snippets, terminal and shortcuts.</span></div><div class="infocard"><b>AUTO SAVE</b><span>Work is stored locally in this browser.</span></div></div><p>Version 3.0 · Standalone edition. Use a local development server or hosting for advanced multi-file web projects.</p><div class="actions"><button class="btn gold" onclick="closeModal('appInfo')">Back to Forge</button><button class="btn" onclick="openModal('developerInfo')">Developer Profile →</button></div></div></div>
-<div class="modal" id="developerInfo"><div class="dialog"><button class="btn close" onclick="closeModal('developerInfo')">✕</button><h2>Developer Profile</h2><div class="profile"><img class="avatar" src="Kaushalji.png" alt="Developer" onerror="this.style.display='none'"><div><h3>Kaushal</h3><small>Full Stack Web Developer &amp; Tech Educator</small></div></div><p>Creating practical digital tools, web projects and computer-learning resources for students and developers.</p><div class="grid"><div class="infocard"><b>LEARNING</b><span>ITI · COPA Trade<br>NIELIT O-Level (IT)</span></div><div class="infocard"><b>TECHNOLOGY</b><span>HTML, CSS, JavaScript, Angular, Python, IoT</span></div><div class="infocard"><b>COMPUTER SKILLS</b><span>MS Office, Tally Prime, Advanced Excel</span></div><div class="infocard"><b>PROJECT</b><span>Dragon IDE · Web development workspace</span></div></div><div class="actions"><a class="btn gold" style="text-decoration:none" href="https://harshitkaushal9129-bit.github.io/full-forms-for-o-level/index.html" target="_blank" rel="noopener">NIELIT O Level Master Portal ↗</a><button class="btn" onclick="closeModal('developerInfo')">Close</button></div></div></div>
-<div class="modal" id="shortcuts"><div class="dialog"><button class="btn close" onclick="closeModal('shortcuts')">✕</button><h2>⌨ Keyboard Shortcuts</h2><div class="grid">
-<div class="infocard"><b>Ctrl + Enter</b><span>Run preview</span></div><div class="infocard"><b>Ctrl + S</b><span>Save all files</span></div><div class="infocard"><b>Alt + 1 / 2 / 3</b><span>Switch HTML / CSS / JS</span></div><div class="infocard"><b>Ctrl + Shift + E</b><span>Code fullscreen</span></div><div class="infocard"><b>Ctrl + Shift + O</b><span>Output fullscreen</span></div><div class="infocard"><b>Ctrl + `</b><span>Toggle terminal</span></div><div class="infocard"><b>Tab</b><span>Insert indentation</span></div><div class="infocard"><b>Esc</b><span>Exit fullscreen / close dialog</span></div></div></div></div>
-<div class="modal" id="snippets"><div class="dialog"><button class="btn close" onclick="closeModal('snippets')">✕</button><h2>⚡ Dragon Snippet Forge</h2><p>Select a snippet for the active file.</p><div class="grid"><button class="btn" onclick="snippet('html5')">HTML5 Boilerplate</button><button class="btn" onclick="snippet('section')">HTML Section</button><button class="btn" onclick="snippet('flex')">CSS Flex Center</button><button class="btn" onclick="snippet('grid')">CSS Grid</button><button class="btn" onclick="snippet('fetch')">JS Fetch API</button><button class="btn" onclick="snippet('event')">JS Event Listener</button></div></div></div>
-<div class="modal" id="command"><div class="dialog"><button class="btn close" onclick="closeModal('command')">✕</button><h2>⌘ Dragon Command Center</h2><p>Choose an action to command your workspace.</p><div class="grid"><button class="btn run" onclick="runPreview();closeModal('command')">▶ Run Project</button><button class="btn" onclick="saveAll();closeModal('command')">▣ Save All</button><button class="btn" onclick="toggleEditorFull();closeModal('command')">⛶ Toggle Code Fullscreen</button><button class="btn" onclick="togglePreviewFull();closeModal('command')">◱ Toggle Output Fullscreen</button><button class="btn" onclick="toggleTerminal();closeModal('command')">▤ Toggle Terminal</button><button class="btn" onclick="openModal('snippets');closeModal('command')">⚡ Open Snippets</button><button class="btn" onclick="downloadProject();closeModal('command')">⇩ Export Project</button><button class="btn" onclick="openModal('developerInfo');closeModal('command')">♙ Developer Info</button></div></div></div>
+<div id="helpModal" class="modal" onclick="if(event.target === this) hideModal('helpModal')">
+<div class="modal-content">
+<h3>User Guide</h3>
+<p style="margin-top:10px; color:#ccc;">Multiple files ya poora project folder import karke unhe alag-alag tabs mein edit kar sakte hain. Auto-save aur bracket matching enabled hai.</p>
+<button class="close-btn" onclick="hideModal('helpModal')">Close</button>
+</div>
+</div>
+
+<div id="shortcutModal" class="modal" onclick="if(event.target === this) hideModal('shortcutModal')">
+<div class="modal-content">
+<h3>Keyboard Shortcuts</h3>
+<div class="shortcut-list">
+<div class="shortcut-item"><span>Run Code</span> <span class="kbd">Ctrl + Enter</span></div>
+<div class="shortcut-item"><span>Save File</span> <span class="kbd">Ctrl + S</span></div>
+<div class="shortcut-item"><span>HTML Tab</span> <span class="kbd">Alt + 1</span></div>
+<div class="shortcut-item"><span>CSS Tab</span> <span class="kbd">Alt + 2</span></div>
+<div class="shortcut-item"><span>JS Tab</span> <span class="kbd">Alt + 3</span></div>
+<div class="shortcut-item"><span>Toggle Theme</span> <span class="kbd">Ctrl + T</span></div>
+<div class="shortcut-item"><span>Auto-Indent/Tab</span> <span class="kbd">Tab Key</span></div>
+<div class="shortcut-item"><span>Clear All</span> <span class="kbd">Ctrl + Shift + X</span></div>
+</div>
+<button class="close-btn" onclick="hideModal('shortcutModal')">Got it!</button>
+</div>
+</div>
+
+<div id="templateModal" class="modal" onclick="if(event.target === this) hideModal('templateModal')">
+<div class="modal-content">
+<h3>⚡ Quick Templates</h3>
+<p style="font-size: 12px; color: #aaa; margin-top: 5px;">Select a template to insert into your editor</p>
+<div class="shortcut-list">
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('html5')"><span>🌐 HTML5 Boilerplate</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('flexbox')"><span>📐 CSS Flexbox Centering</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('grid')"><span>📊 CSS Grid Layout</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('fetch')"><span>🔄 JS Fetch API Request</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+<div class="shortcut-item" style="cursor:pointer;" onclick="selectTemplate('dom')"><span>🎯 JS Query Selector</span> <span style="color:var(--primary); font-size:11px;">Insert</span></div>
+</div>
+<button class="close-btn" onclick="hideModal('templateModal')">Cancel</button>
+</div>
+</div>
+
+<div id="devModal" class="modal" onclick="if(event.target === this) hideModal('devModal')">
+<div class="modal-content">
+<div class="dev-card">
+<img src="Kaushalji.png" class="dev-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+<div class="dev-name">Kaushalji</div>
+<div class="dev-info">Full Stack Web Developer & Designer</div>
+<div class="feature-grid">
+<div class="feature-item">✓ Auto-Save Local</div>
+<div class="feature-item">✓ Bracket Auto-Close</div>
+<div class="feature-item">✓ Live Console Log</div>
+<div class="feature-item">✓ Code Minifier</div>
+</div>
+<div style="font-size: 11px; color: var(--accent); margin-bottom: 5px;">Build Version: 1.2.1 (Pro)</div>
+
+<!-- UPI QR Code Section -->
+<div style="margin-top: 15px;">
+<div style="font-size: 12px; color: #ccc; margin-bottom: 5px;">Support via UPI / GPay</div>
+<div class="qr-container" id="qrcode"></div>
+<div class="upi-text">mandavikaushal913@okaxis</div>
+</div>
+</div>
+<div class="support-btns">
+<a href="https://wa.me/9129191898" target="_blank" class="support-link whatsapp-btn"><span>💬 WhatsApp Support</span></a>
+<a href="tel:9129191898" class="support-link call-btn"><span>📞 Call Developer</span></a>
+</div>
+<button class="close-btn" onclick="hideModal('devModal')">Return to Editor</button>
+</div>
+</div>
 
 <script>
-const files={html:{name:'index.html',lang:'HTML',code:'<!DOCTYPE html>\\n<html lang="en">\\n<head>\\n  <meta charset="UTF-8">\\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\\n  <title>Dragon Project</title>\\n</head>\\n<body>\\n  <main class="hero">\\n    <div class="dragon">🐉</div>\\n    <h1>Welcome to Dragon IDE</h1>\\n    <p>Build something legendary.</p>\\n    <button id="forgeBtn">Start building</button>\\n  </main>\\n</body>\\n</html>'},css:{name:'style.css',lang:'CSS',code:'* { box-sizing: border-box; }\\nbody {\\n  margin: 0;\\n  min-height: 100vh;\\n  display: grid;\\n  place-items: center;\\n  font-family: system-ui, sans-serif;\\n  background: #101a2b;\\n  color: white;\\n}\\n.hero { text-align: center; padding: 36px; }\\n.dragon { font-size: 64px; }\\nbutton {\\n  border: 0; border-radius: 9px; padding: 12px 20px;\\n  background: #e89a45; color: #1b1720; cursor: pointer;\\n}'},js:{name:'script.js',lang:'JAVASCRIPT',code:"document.querySelector('#forgeBtn')?.addEventListener('click', () => {\\n  alert('The forge is alive!');\\n  console.log('Dragon IDE JavaScript is running.');\\n});"}};
-const key='dragon_ide_v3_',editor=document.getElementById('code');let active='html',dirty={html:false,css:false,js:false},previewDoc='',toastTimer;
-function init(){Object.keys(files).forEach(k=>{let s=localStorage.getItem(key+k);if(s!==null)files[k].code=s;});editor.value=files.html.code;updateGutter();render();}
-function switchFile(k){files[active].code=editor.value;active=k;editor.value=files[k].code;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id==='tab-'+k));document.querySelectorAll('.file').forEach(t=>t.classList.toggle('active',t.dataset.file===k));document.getElementById('fileTitle').textContent=files[k].name;document.getElementById('language').textContent=files[k].lang;updateGutter();updateCursor();editor.focus();}
-function markDirty(){dirty[active]=true;document.querySelector('#tab-'+active+' .x').textContent='●';document.querySelector('.file[data-file="'+active+'"]').classList.add('changed');}
-function updateGutter(){let n=Math.max(1,editor.value.split('\\n').length);document.getElementById('gutter').textContent=Array.from({length:n},(_,i)=>i+1).join('\\n');}
-function updateCursor(){let p=editor.value.slice(0,editor.selectionStart).split('\\n');document.getElementById('cursor').textContent=`Ln ${p.length}, Col ${p[p.length-1].length+1}`;}
-editor.addEventListener('input',()=>{files[active].code=editor.value;localStorage.setItem(key+active,editor.value);markDirty();updateGutter();updateCursor();render();status('Autosaved · '+files[active].name);});
-editor.addEventListener('scroll',()=>document.getElementById('gutter').scrollTop=editor.scrollTop);
-editor.addEventListener('click',updateCursor);editor.addEventListener('keyup',updateCursor);
-editor.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();let a=editor.selectionStart,b=editor.selectionEnd;editor.setRangeText('  ',a,b,'end');editor.dispatchEvent(new Event('input'));}if(e.key==='Enter'){let pos=editor.selectionStart,line=editor.value.slice(0,pos).split('\\n').pop(),indent=(line.match(/^\\s*/)||[''])[0];if(indent){e.preventDefault();editor.setRangeText('\\n'+indent,pos,editor.selectionEnd,'end');editor.dispatchEvent(new Event('input'));}}});
-function render(){files[active].code=editor.value;let html=files.html.code,css=files.css.code.replace(/<\\/style/gi,'<\\\\/style'),js=files.js.code.replace(/<\\/script/gi,'<\\\\/script');let style='<style>'+css+'</style>';let script='<script>'+js+'<\\/script>';if(html.includes('</head>'))html=html.replace('</head>',style+'</head>');else html=style+html;if(html.includes('</body>'))html=html.replace('</body>',script+'</body>');else html+=script;previewDoc=html;document.getElementById('frame').srcdoc=html;}
-function runPreview(){files[active].code=editor.value;render();status('Preview refreshed');log('Preview rendered successfully.');}
-function saveAll(){files[active].code=editor.value;Object.keys(files).forEach(k=>{localStorage.setItem(key+k,files[k].code);dirty[k]=false;document.querySelector('#tab-'+k+' .x').textContent='×';document.querySelector('.file[data-file="'+k+'"]').classList.remove('changed');});status('All files saved locally');toast('All files saved');}
-function download(name,text,type){let u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
-function downloadProject(){files[active].code=editor.value;download('index.html',files.html.code,'text/html');download('style.css',files.css.code,'text/css');download('script.js',files.js.code,'text/javascript');saveAll();toast('Project files exported');}
-function importFiles(list){[...list].forEach(f=>{let n=f.name.toLowerCase(),k=n.endsWith('.html')||n.endsWith('.htm')?'html':n.endsWith('.css')?'css':n.endsWith('.js')?'js':null;if(!k){log('Skipped '+f.name+' (unsupported type)','warn');return;}let r=new FileReader();r.onload=()=>{files[k].code=String(r.result);localStorage.setItem(key+k,files[k].code);switchFile(k);editor.value=files[k].code;editor.dispatchEvent(new Event('input'));toast(f.name+' imported');};r.readAsText(f);});}
-function toggleEditorFull(){document.body.classList.remove('preview-full');document.body.classList.toggle('editor-full');}
-function togglePreviewFull(){document.body.classList.remove('editor-full');document.body.classList.toggle('preview-full');}
-function exitFull(){document.body.classList.remove('editor-full','preview-full');}
-function toggleTerminal(){document.getElementById('terminal').classList.toggle('open');}
-function toggleExplorer(){let e=document.getElementById('explorer');e.style.display=e.style.display==='none'?'flex':'none';}
-function toggleTheme(){document.body.classList.toggle('light');if(document.body.classList.contains('light')){document.documentElement.style.setProperty('--bg','#edf2f8');document.documentElement.style.setProperty('--panel','#f7f9fc');document.documentElement.style.setProperty('--panel2','#e7edf5');document.documentElement.style.setProperty('--line','#c9d5e4');document.documentElement.style.setProperty('--text','#182337');document.documentElement.style.setProperty('--editor','#f8fafc');document.documentElement.style.colorScheme='light';}else location.reload();}
-function changeFont(){editor.style.fontSize=document.getElementById('fontSize').value+'px';}
-function status(t){document.getElementById('statusMsg').textContent='● '+t;}
-function log(t,type=''){let d=document.createElement('div');d.className=type;d.textContent='› '+t;document.getElementById('terminalBody').appendChild(d);document.getElementById('terminalBody').scrollTop=999999;}
-function clearTerminal(){document.getElementById('terminalBody').innerHTML='';}
-function openPreviewTab(){let w=window.open();if(w){w.document.open();w.document.write(previewDoc);w.document.close();}}
-function formatCode(){let v=editor.value;if(active==='html')v=v.replace(/>\\s*</g,'>\\n<');else if(active==='css')v=v.replace(/\\s*\\{\\s*/g,' {\\n  ').replace(/;\\s*/g,';\\n  ').replace(/\\s*\\}\\s*/g,'\\n}\\n');else v=v.replace(/;\\s*/g,';\\n').replace(/\\{\\s*/g,'{\\n  ').replace(/\\s*\\}/g,'\\n}');editor.value=v.trim();editor.dispatchEvent(new Event('input'));toast('Basic formatting applied');}
-function snippet(type){let map={html5:'<!DOCTYPE html>\\n<html lang="en">\\n<head>\\n  <meta charset="UTF-8">\\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\\n  <title>Document</title>\\n</head>\\n<body>\\n</body>\\n</html>',section:'<section class="section">\\n  <h2>Section heading</h2>\\n  <p>Write your content here.</p>\\n</section>',flex:'display: flex;\\njustify-content: center;\\nalign-items: center;\\ngap: 1rem;',grid:'display: grid;\\ngrid-template-columns: repeat(auto-fit, minmax(180px, 1fr));\\ngap: 1rem;',fetch:"fetch('https://example.com/data.json')\\n  .then(response => response.json())\\n  .then(data => console.log(data))\\n  .catch(error => console.error(error));",event:"document.querySelector('#myButton')?.addEventListener('click', () => {\\n  console.log('Button clicked');\\n});"};let expected=type==='flex'||type==='grid'?'css':type==='fetch'||type==='event'?'js':'html';if(active!==expected){toast('Switch to '+files[expected].name+' first');return;}let a=editor.selectionStart,b=editor.selectionEnd;editor.setRangeText(map[type],a,b,'end');editor.dispatchEvent(new Event('input'));closeModal('snippets');}
-function searchCode(){let q=prompt('Find text in current file:');if(!q)return;let i=editor.value.toLowerCase().indexOf(q.toLowerCase());if(i<0){toast('Text not found');return;}editor.focus();editor.setSelectionRange(i,i+q.length);}
-function openModal(id){document.getElementById(id).classList.add('show');}function closeModal(id){document.getElementById(id).classList.remove('show');}
-document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
-function toast(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),1800);}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){exitFull();document.querySelectorAll('.modal.show').forEach(m=>m.classList.remove('show'));}if(e.ctrlKey&&e.key==='Enter'){e.preventDefault();runPreview();}if(e.ctrlKey&&e.key.toLowerCase()==='s'){e.preventDefault();saveAll();}if(e.altKey&&['1','2','3'].includes(e.key)){e.preventDefault();switchFile(['html','css','js'][+e.key-1]);}if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='e'){e.preventDefault();toggleEditorFull();}if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='o'){e.preventDefault();togglePreviewFull();}if(e.ctrlKey&&e.key==='`'){e.preventDefault();toggleTerminal();}});
-/* Drag-to-resize editor and preview, mouse + touch */
-(()=>{const split=document.getElementById('splitter'),panes=document.getElementById('panes'),ed=document.getElementById('editorPane'),pv=document.getElementById('previewPane');let moving=false;function start(e){moving=true;split.classList.add('dragging');e.preventDefault();}function move(e){if(!moving)return;let r=panes.getBoundingClientRect(),x=e.touches?e.touches[0].clientX:e.clientX,y=e.touches?e.touches[0].clientY:e.clientY;if(innerWidth<=570){let pct=Math.max(30,Math.min(70,(y-r.top)/r.height*100));ed.style.flex='none';ed.style.height=pct+'%';pv.style.flex='1';}else{let pct=Math.max(30,Math.min(75,(x-r.left)/r.width*100));ed.style.flex='none';ed.style.width=pct+'%';pv.style.flex='1';}}function end(){moving=false;split.classList.remove('dragging');}split.addEventListener('mousedown',start);window.addEventListener('mousemove',move);window.addEventListener('mouseup',end);split.addEventListener('touchstart',start,{passive:false});window.addEventListener('touchmove',move,{passive:false});window.addEventListener('touchend',end);})();
-init();
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => {}); }); }
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('installBtn').style.display = 'block'; });
+document.getElementById('installBtn').addEventListener('click', () => { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { document.getElementById('installBtn').style.display = 'none'; deferredPrompt = null; }); } });
+
+// --- Generate UPI QR Code ---
+window.addEventListener('DOMContentLoaded', () => {
+    try {
+        const upiString = "upi://pay?pa=mandavikaushal913@okaxis&pn=Kaushalji&cu=INR";
+        const qrContainer = document.getElementById("qrcode");
+        if(qrContainer && typeof QRCode !== 'undefined') {
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: upiString,
+                width: 120,
+                height: 120,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+    } catch(e) {}
+});
+
+// --- Auto-Load Saved Data ---
+window.addEventListener('DOMContentLoaded', () => {
+    if(localStorage.getItem('dev_html')) document.getElementById('html-code').value = localStorage.getItem('dev_html');
+    if(localStorage.getItem('dev_css')) document.getElementById('css-code').value = localStorage.getItem('dev_css');
+    if(localStorage.getItem('dev_js')) document.getElementById('js-code').value = localStorage.getItem('dev_js');
+    runPreview();
+});
+
+let extraTabs = [];
+function handleInput(type) {
+    runPreview();
+    const val = document.getElementById(type + '-code').value;
+    localStorage.setItem('dev_' + type, val);
+}
+
+function openLocalFile(event) { const files = event.target.files; for (let file of files) { readAndProcessFile(file); } }
+function openFolder(event) { const files = event.target.files; for (let file of files) { if (!file.name.startsWith('.')) { readAndProcessFile(file); } } }
+function readAndProcessFile(file) {
+    const reader = new FileReader();
+    const name = file.name;
+    reader.onload = function(e) {
+        const content = e.target.result;
+        if (name === 'index.html') { document.getElementById('html-code').value = content; switchTab('html'); }
+        else if (name === 'style.css') { document.getElementById('css-code').value = content; switchTab('css'); }
+        else if (name === 'script.js') { document.getElementById('js-code').value = content; switchTab('js'); }
+        else { createDynamicTab(name, content); }
+        runPreview();
+    };
+    reader.readAsText(file);
+}
+
+function createDynamicTab(name, content) {
+    const safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
+    if (document.getElementById('tab-' + safeId)) { switchTab(safeId); document.getElementById(safeId + '-code').value = content; return; }
+    extraTabs.push({id: safeId, name: name});
+    const tab = document.createElement('div');
+    tab.className = 'tab';
+    tab.id = 'tab-' + safeId;
+    tab.innerHTML = `${name} <span class="close-icon" onclick="closeDynamicTab(event, '${safeId}')">×</span>`;
+    tab.onclick = () => switchTab(safeId);
+    document.getElementById('tabs-container').appendChild(tab);
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.id = 'panel-' + safeId;
+    panel.innerHTML = `<div class="panel-header"><label>${name}</label><button class="btn" style="background:var(--primary);color:white" onclick="saveFile('${safeId}')">Save</button></div><textarea id="${safeId}-code" oninput="runPreview()">${content}</textarea>`;
+    document.getElementById('panels-container').appendChild(panel);
+    switchTab(safeId);
+    updateStyle();
+}
+
+function closeDynamicTab(e, id) { e.stopPropagation(); document.getElementById('tab-' + id).remove(); document.getElementById('panel-' + id).remove(); extraTabs = extraTabs.filter(t => t.id !== id); switchTab('html'); }
+function switchTab(type) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const targetTab = document.getElementById('tab-' + type);
+    const targetPanel = document.getElementById('panel-' + type);
+    if(targetTab) targetTab.classList.add('active');
+    if(targetPanel) targetPanel.classList.add('active');
+}
+
+function runPreview() {
+    let html = document.getElementById("html-code").value;
+    let css = "<style>" + document.getElementById("css-code").value + "</style>";
+    let userJs = document.getElementById("js-code").value;
+    
+    let consoleInterceptor = `<script>
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            window.parent.postMessage({type: 'console_log', data: args.join(' ')}, '*');
+        };
+        window.onerror = function(msg, url, line) {
+            window.parent.postMessage({type: 'console_error', data: msg + ' (Line: ' + line + ')'}, '*');
+        };
+    <\/script>`;
+
+    let js = consoleInterceptor + "<script>" + userJs + "<\/script>";
+
+    extraTabs.forEach(t => {
+        const el = document.getElementById(t.id + "-code");
+        if(el) {
+            const content = el.value;
+            if (t.name.endsWith('.html')) html += content;
+            else if (t.name.endsWith('.css')) css += "<style>" + content + "</style>";
+            else if (t.name.endsWith('.js')) js += "<script>" + content + "<\/script>";
+        }
+    });
+
+    const outputFrame = document.getElementById("output").contentWindow.document;
+    outputFrame.open(); outputFrame.write(html + css + js); outputFrame.close();
+}
+
+window.addEventListener('message', (e) => {
+    if(e.data.type === 'console_log') {
+        appendConsoleLog(e.data.data, '#4ec9b0');
+    } else if(e.data.type === 'console_error') {
+        appendConsoleLog(e.data.data, '#f44336');
+    }
+});
+
+function appendConsoleLog(txt, color) {
+    const box = document.getElementById('console-logs');
+    const div = document.createElement('div');
+    div.style.color = color;
+    div.innerText = "> " + txt;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+}
+function clearConsole() { document.getElementById('console-logs').innerHTML = ''; }
+function toggleConsole() {
+    const c = document.getElementById('console-drawer');
+    c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function saveFile(type) {
+    const area = document.getElementById(type + '-code');
+    if(!area) return;
+    const blob = new Blob([area.value], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    let foundTab = extraTabs.find(t => t.id === type);
+    a.download = foundTab ? foundTab.name : `index.${type}`;
+    a.click();
+}
+
+function insertTag(open, close) {
+    const textarea = document.querySelector('.panel.active textarea');
+    if(!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    textarea.value = textarea.value.substring(0, start) + open + textarea.value.substring(start, end) + close + textarea.value.substring(end);
+    textarea.focus();
+    textarea.setSelectionRange(start + open.length, end + open.length);
+    runPreview();
+}
+
+function selectTemplate(type) {
+    hideModal('templateModal');
+    let snippet = "";
+    if (type === 'html5') snippet = `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>Document</title>\n</head>\n<body>\n\n</body>\n</html>`;
+    else if (type === 'flexbox') snippet = `display: flex;\njustify-content: center;\nalign-items: center;`;
+    else if (type === 'grid') snippet = `display: grid;\ngrid-template-columns: repeat(2, 1fr);\ngap: 10px;`;
+    else if (type === 'fetch') snippet = `fetch('https://api.example.com/data')\n.then(res => res.json())\n.then(data => console.log(data))\n.catch(err => console.error(err));`;
+    else if (type === 'dom') snippet = `const element = document.querySelector('#myElement');`;
+    insertTag(snippet, '');
+}
+
+function minifyCode() {
+    const activeTextarea = document.querySelector('.panel.active textarea');
+    if(!activeTextarea) return;
+    let val = activeTextarea.value;
+    val = val.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*/g, '');
+    val = val.replace(/\s+/g, ' ').trim();
+    activeTextarea.value = val;
+    runPreview();
+    alert("Code minified successfully!");
+}
+
+document.addEventListener('keydown', function(e) {
+    const ta = document.activeElement;
+    if (ta && ta.tagName === 'TEXTAREA') {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = ta.selectionStart;
+            ta.value = ta.value.substring(0, start) + "    " + ta.value.substring(ta.selectionEnd);
+            ta.selectionStart = ta.selectionEnd = start + 4;
+        }
+        
+        const pairs = { '(': ')', '{': '}', '[': ']', '"': '"', "'": "'" };
+        if (pairs[e.key]) {
+            e.preventDefault();
+            const start = ta.selectionStart;
+            const end = ta.selectionEnd;
+            const val = ta.value;
+            const closeChar = pairs[e.key];
+            ta.value = val.substring(0, start) + e.key + val.substring(start, end) + closeChar + val.substring(end);
+            ta.selectionStart = start + 1;
+            ta.selectionEnd = end + 1;
+            runPreview();
+        }
+    }
+});
+
+function updateCursor(ta) {
+    const pos = ta.selectionStart;
+    const text = ta.value.substr(0, pos);
+    const lines = text.split("\n");
+    const ln = lines.length;
+    const col = lines[lines.length - 1].length + 1;
+    document.getElementById('cursor-pos').innerText = `Ln ${ln}, Col ${col}`;
+}
+
+function searchInEditor(val) {
+    const activeTextarea = document.querySelector('.panel.active textarea');
+    if(!val || !activeTextarea) return;
+    const index = activeTextarea.value.toLowerCase().indexOf(val.toLowerCase());
+    if(index !== -1) { activeTextarea.focus(); activeTextarea.setSelectionRange(index, index + val.length); }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    document.getElementById('theme-status').innerText = `● Mode: ${isLight ? 'Light' : 'Dark'} | UTF-8`;
+}
+
+function toggleWrap() {
+    document.querySelectorAll('textarea').forEach(t => t.classList.toggle('nowrap'));
+}
+
+function updateStyle() {
+    const sz = document.getElementById('font-size').value;
+    const fm = document.getElementById('font-family').value;
+    document.querySelectorAll('textarea').forEach(t => { t.style.fontSize = sz; t.style.fontFamily = fm; });
+}
+
+function toggleEditorFS() {
+    const editorPanels = document.querySelector('.editor-panels');
+    const previewArea = document.querySelector('.preview-area');
+    editorPanels.classList.toggle('fullscreen');
+    previewArea.style.display = editorPanels.classList.contains('fullscreen') ? 'none' : 'flex';
+}
+
+function togglePreviewFS() {
+    const previewArea = document.querySelector('.preview-area');
+    const editorPanels = document.querySelector('.editor-panels');
+    previewArea.classList.toggle('fullscreen');
+    editorPanels.style.display = previewArea.classList.contains('fullscreen') ? 'none' : 'flex';
+}
+
+async function shareProject() {
+    const text = `Check out my code on DevStudio Pro!\n\nBuilt by Kaushalji.`;
+    if (navigator.share) { try { await navigator.share({ title: 'DevStudio Pro', text: text, url: window.location.href }); } catch (err) {} }
+    else { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }
+}
+
+function clearAll() { 
+    if(confirm("Are you sure? All code and storage will be cleared.")) {
+        localStorage.clear();
+        location.reload(); 
+    }
+}
+
+function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+
+window.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runPreview(); }
+    if (e.ctrlKey && e.key === 's') { e.preventDefault(); const activeTab = document.querySelector('.tab.active'); if(activeTab) saveFile(activeTab.id.replace('tab-', '')); }
+    if (e.altKey && e.key === '1') { e.preventDefault(); switchTab('html'); }
+    if (e.altKey && e.key === '2') { e.preventDefault(); switchVal = switchTab('css'); }
+    if (e.altKey && e.key === '3') { e.preventDefault(); switchTab('js'); }
+    if (e.ctrlKey && e.key === 't') { e.preventDefault(); toggleTheme(); }
+    if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) { e.preventDefault(); clearAll(); }
+});
 </script>
 </body>
 </html>
